@@ -1,0 +1,729 @@
+Vocabulary
+
+Modifier: adj
+Test cases:      1000
+Fails (rate):    1000 (100.0%)
+
+Example fails:
+1.0 ('Is Aaron Sanders an editor?', 'Is Aaron Sanders a successful editor?')
+----
+1.0 ('Is Emily Thompson an actor?', 'Is Emily Thompson an elite actor?')
+----
+1.0 ('Is Jason Thomas an organizer?', 'Is Jason Thomas an outstanding organizer?')
+----
+
+
+different adjectives
+Test cases:      954
+Fails (rate):    884 (92.7%)
+
+Example fails:
+1.0 ('Is Sarah Adams American?', 'Is Sarah Adams famous?')
+----
+0.8 ('Is Shannon Gonzalez dead?', 'Is Shannon Gonzalez evil?')
+----
+0.9 ('Is Michael Perez Jewish?', 'Is Michael Perez Indian?')
+----
+
+
+Different animals
+Test cases:      928
+Fails (rate):    928 (100.0%)
+
+Example fails:
+1.0 ('Can I feed my lobster rice?', 'Can I feed my monkey rice?')
+----
+1.0 ('Can I feed my rabbit corn?', 'Can I feed my rat corn?')
+----
+1.0 ('Can I feed my turtle milk?', 'Can I feed my fish milk?')
+----
+
+
+Irrelevant modifiers - animals
+Test cases:      1000
+Fails (rate):    0 (0.0%)
+
+
+Irrelevant modifiers - people
+Test cases:      987
+Fails (rate):    0 (0.0%)
+
+
+Irrelevant preamble with different examples.
+Test cases:      938
+Fails (rate):    0 (0.0%)
+
+
+Preamble is relevant (different injuries)
+Test cases:      975
+Fails (rate):    975 (100.0%)
+
+Example fails:
+1.0 ('I hurt my head last time I played soccer. Is this a common injury?', 'I hurt my teeth last time I played soccer. Is this a common injury?')
+----
+1.0 ('I hurt my teeth last time I played golf. Should I never play again?', 'I hurt my head last time I played golf. Should I never play again?')
+----
+1.0 ('I hurt my face last time I played golf. Should I never play again?', 'I hurt my hand last time I played golf. Should I never play again?')
+----
+
+
+How can I become more X != How can I become less X
+Test cases:      2000
+Fails (rate):    2000 (100.0%)
+
+Example fails:
+1.0 ('How can I become more religious?', 'How can I become less religious?')
+----
+1.0 ('How can I become more courageous?', 'How can I become less courageous?')
+----
+1.0 ('How can I become more stupid?', 'How can I become less stupid?')
+----
+
+
+
+
+Taxonomy
+
+How can I become more {synonym}?
+Test cases:      6000
+Fails (rate):    0 (0.0%)
+
+
+(question, f(question)) where f(question) replaces synonyms?
+Test cases:      326
+Fails (rate):    0 (0.0%)
+
+
+Replace synonyms in real pairs
+Test cases:      251
+Fails (rate):    21 (8.4%)
+
+Example fails:
+0.6 ('Are you happy living with your family?', "What's your view of happy family?")
+0.2 ('Are you joyful living with your family?', "What's your view of happy family?")
+0.3 ('Are you happy living with your family?', "What's your view of joyful family?")
+
+----
+0.6 ('Are you happy with who you are?', 'Are you happy now? If no, why not?')
+0.2 ('Are you joyful with who you are?', 'Are you joyful now? If no, why not?')
+0.4 ('Are you joyful with who you are?', 'Are you happy now? If no, why not?')
+
+----
+0.5 ('Are you truly happy?', 'Do you live happy?')
+0.9 ('Are you truly joyful?', 'Do you live joyful?')
+
+----
+
+
+How can I become more X = How can I become less antonym(X)
+Test cases:      2000
+Fails (rate):    0 (0.0%)
+
+
+
+
+Robustness
+
+add one typo
+Test cases:      500
+Fails (rate):    96 (19.2%)
+
+Example fails:
+0.7 ("What's the best way to conclude a Group Discussion in a placement drive?", "In a group discussion, what is the difference between 'summarizing' and 'concluding' in the end?")
+0.5 ("What's the bset way to conclude a Group Discussion in a placement drive?", "In a group discussion, what is the difference between 'summarizing' and 'concluding' in the end?")
+
+----
+0.5 ('How do you search for middle level or senior management jobs?', 'How many people in India would be in middle level management?')
+0.4 ('How do you search for middle level or senior management jobs?', 'How many people in Inida would be in middle level management?')
+0.4 ('How do you search for middle level or seniorm anagement jobs?', 'How many people in India would be in middle level management?')
+
+----
+0.6 ('How do I find the Nth prime number efficiently when N is as large as 100000000?', 'Is there a function for finding the nth prime number?')
+0.3 ('How do I find the Nth prime number efficiently when N is as large as 100000000?', 'Is there a function for fniding the nth prime number?')
+0.4 ('How do I fidn the Nth prime number efficiently when N is as large as 100000000?', 'Is there a function for finding the nth prime number?')
+
+----
+
+
+contrations
+Test cases:      500
+Fails (rate):    14 (2.8%)
+
+Example fails:
+0.6 ('Is there corruption in Red Cross?', 'Why is the plague cross red?')
+0.4 ('Is there corruption in Red Cross?', "Why's the plague cross red?")
+
+----
+0.5 ("What's it like to get accepted to Harvard but not go?", 'What is it like to get admitted to Harvard?')
+0.4 ("What's it like to get accepted to Harvard but not go?", "What's it like to get admitted to Harvard?")
+
+----
+0.6 ('What is NATA exam?', 'What is the best way to prepare for NATA exam?')
+0.4 ("What's NATA exam?", 'What is the best way to prepare for NATA exam?')
+
+----
+
+
+(q, paraphrase(q))
+Test cases:      200
+Fails (rate):    173 (86.5%)
+
+Example fails:
+1.0 ('How do I learn maths properly?', 'How do I learn maths properly?')
+0.1 ('If I want to learn maths properly, what should I do?', 'How can you learn maths properly?')
+0.1 ('If you want to learn maths properly, what should you do?', 'How can I learn maths properly?')
+
+----
+1.0 ("How do I get a neighbor's WiFi password?", "How do I get a neighbor's WiFi password?")
+0.1 ("If I want to get a neighbor's WiFi password, what should I do?", "How can you get a neighbor's WiFi password?")
+0.1 ("If I want to get a neighbor's WiFi password, what should I do?", "How do you get a neighbor's WiFi password?")
+
+----
+1.0 ('How do I get clean from smoking crystal meth In 72 hours?', 'How do I get clean from smoking crystal meth In 72 hours?')
+0.1 ('If I want to get clean from smoking crystal meth In 72 hours, what should I do?', 'How can you get clean from smoking crystal meth In 72 hours?')
+0.1 ('In order to get clean from smoking crystal meth In 72 hours, what should I do?', 'How can you get clean from smoking crystal meth In 72 hours?')
+
+----
+
+
+Product of paraphrases(q1) * paraphrases(q2)
+Test cases:      100
+Fails (rate):    95 (95.0%)
+
+Example fails:
+1.0 ('How do I prepare a study timetable being a class 12 medical science student?', 'How do I prepare a study timetable being a class 12 science student?')
+0.1 ('If I want to prepare a study timetable being a class 12 medical science student, what should I do?', 'How can you prepare a study timetable being a class 12 science student?')
+0.1 ('In order to prepare a study timetable being a class 12 medical science student, what should I do?', 'How can you prepare a study timetable being a class 12 science student?')
+
+----
+1.0 ('How do I get an internship in Bangalore?', 'How do I attend internship in Bangalore?')
+0.1 ('If I want to get an internship in Bangalore, what should I do?', 'How can you attend internship in Bangalore?')
+0.3 ('If I want to get an internship in Bangalore, what should I do?', 'How do you attend internship in Bangalore?')
+
+----
+0.9 ('How do I focus?', 'How can I focus in class?')
+0.2 ('If I want to focus, what should I do?', 'How can you focus in class?')
+0.3 ('If I want to focus, what should I do?', 'How do you focus in class?')
+
+----
+
+
+
+
+NER
+
+same adjectives, different people
+Test cases:      972
+Fails (rate):    972 (100.0%)
+
+Example fails:
+0.9 ('Is Maria Edwards trustworthy?', 'Is Shannon Morales trustworthy?')
+----
+0.9 ('Is Amy Adams an anarchist?', 'Is Angela Gutierrez an anarchist?')
+----
+0.9 ('Is Taylor Foster immortal?', 'Is Jonathan Cook immortal?')
+----
+
+
+same adjectives, different people v2
+Test cases:      984
+Fails (rate):    984 (100.0%)
+
+Example fails:
+1.0 ('Is John Kelly mad?', 'Is Katherine Kelly mad?')
+----
+1.0 ('Is Samantha Cruz an immigrant?', 'Is Dylan Cruz an immigrant?')
+----
+1.0 ('Is Thomas Adams an atheist?', 'Is Amber Adams an atheist?')
+----
+
+
+same adjectives, different people v3
+Test cases:      990
+Fails (rate):    990 (100.0%)
+
+Example fails:
+1.0 ('Is Sean Garcia famous?', 'Is Sean Richardson famous?')
+----
+1.0 ('Is Tyler Morris Christian?', 'Is Tyler Davis Christian?')
+----
+1.0 ('Is Richard Ross evil?', 'Is Richard Williams evil?')
+----
+
+
+Change same name in both questions
+Test cases:      500
+Fails (rate):    34 (6.8%)
+
+Example fails:
+0.5 ('What is your review of Tim Cook (Apple CEO)?', 'Do you think Tim Cook is a good CEO for Apple?')
+0.4 ('What is your review of Matthew Jones (Apple CEO)?', 'Do you think Matthew Jones is a good CEO for Apple?')
+
+----
+0.6 ('How was the personal relationship between Steve Jobs and Bill Gates?', 'Did Steve Jobs hate Bill Gates?')
+0.4 ('How was the personal relationship between Steve Jobs and Joshua Garcia?', 'Did Steve Jobs hate Joshua Garcia?')
+
+----
+0.7 ("Could some of Jesus's teachings be seen as socialist?", 'Was Jesus a socialist?')
+0.4 ("Could some of Lucas's teachings be seen as socialist?", 'Was Lucas a socialist?')
+0.4 ("Could some of Brandon's teachings be seen as socialist?", 'Was Brandon a socialist?')
+
+----
+
+
+Change same location in both questions
+Test cases:      500
+Fails (rate):    25 (5.0%)
+
+Example fails:
+0.5 ('How do you become a permanent resident of New Zealand? (For an American citizen)', 'How do I get permanent residency in New Zealand?')
+0.9 ('How do you become a permanent resident of Bosnia and Herzegovina? (For an American citizen)', 'How do I get permanent residency in Bosnia and Herzegovina?')
+0.8 ('How do you become a permanent resident of Liechtenstein? (For an American citizen)', 'How do I get permanent residency in Liechtenstein?')
+
+----
+0.3 ('What will be the effect on real estate sector after demonetization of currency in India?', 'What will be the impact on real estate by banning 500 and 1000 rupee notes from India?')
+0.6 ('What will be the effect on real estate sector after demonetization of currency in Virgin Islands (U.S.)?', 'What will be the impact on real estate by banning 500 and 1000 rupee notes from Virgin Islands (U.S.)?')
+
+----
+0.9 ('Has anybody encountered or heard of a true UFO incident in India? Or any kind of anomaly in the open sky (day or night)?', 'Has anyone had a genuine UFO encounter or heard of similar incident in India?')
+0.2 ('Has anybody encountered or heard of a true UFO incident in North Macedonia? Or any kind of anomaly in the open sky (day or night)?', 'Has anyone had a genuine UFO encounter or heard of similar incident in North Macedonia?')
+
+----
+
+
+Change same number in both questions
+Test cases:      500
+Fails (rate):    7 (1.4%)
+
+Example fails:
+0.6 ('How can discontinuing 500 and 1000 rupee will help to control black money?', 'How will demonetization of 500 and 1000 rupee notes stop corruption?')
+0.5 ('How can discontinuing 500 and 1005 rupee will help to control black money?', 'How will demonetization of 500 and 1005 rupee notes stop corruption?')
+0.5 ('How can discontinuing 500 and 901 rupee will help to control black money?', 'How will demonetization of 500 and 901 rupee notes stop corruption?')
+
+----
+0.4 ('What would be effect of 500 and 1000 Rs notes ban?', 'What are your views on demonetization of 500 and 1000 rupee notes by the Modi Government?')
+0.6 ('What would be effect of 463 and 1000 Rs notes ban?', 'What are your views on demonetization of 463 and 1000 rupee notes by the Modi Government?')
+0.5 ('What would be effect of 500 and 971 Rs notes ban?', 'What are your views on demonetization of 500 and 971 rupee notes by the Modi Government?')
+
+----
+0.3 ('How can I install Microsoft Office 2013?', 'How do I crack the Microsoft Office 2013 Professional Plus?')
+0.6 ('How can I install Microsoft Office 1616?', 'How do I crack the Microsoft Office 1616 Professional Plus?')
+0.6 ('How can I install Microsoft Office 1834?', 'How do I crack the Microsoft Office 1834 Professional Plus?')
+
+----
+
+
+Change first name in one of the questions
+Test cases:      500
+After filtering: 334 (66.8%)
+Fails (rate):    315 (94.3%)
+
+Example fails:
+0.9 ('What stops Bernie Sanders from running as a Republican?', 'Why has Bernie Sanders stopped running?')
+0.9 ('What stops Brandon Sanders from running as a Republican?', 'Why has Bernie Sanders stopped running?')
+0.9 ('What stops Alex Sanders from running as a Republican?', 'Why has Bernie Sanders stopped running?')
+
+----
+0.9 ('Why should one vote for Donald Trump?', 'Are there any legitimate reasons why one would vote for Donald Trump?')
+0.9 ('Why should one vote for Donald Trump?', 'Are there any legitimate reasons why one would vote for Jeremiah Trump?')
+0.9 ('Why should one vote for Donald Trump?', 'Are there any legitimate reasons why one would vote for Aaron Trump?')
+
+----
+0.6 ('What are we going to do now that Donald Trump has won the election?', 'Now that Donald Trump is president, what will happen to America?')
+0.6 ('What are we going to do now that Zachary Trump has won the election?', 'Now that Donald Trump is president, what will happen to America?')
+0.6 ('What are we going to do now that Daniel Trump has won the election?', 'Now that Donald Trump is president, what will happen to America?')
+
+----
+
+
+Change first and last name in one of the questions
+Test cases:      682
+After filtering: 464 (68.0%)
+Fails (rate):    378 (81.5%)
+
+Example fails:
+1.0 ('Donald Trump won the elections. How much will it affect Italy?', 'Donald Trump won the elections. How much will it affect India?')
+1.0 ('Christopher White won the elections. How much will it affect Italy?', 'Donald Trump won the elections. How much will it affect India?')
+1.0 ('Joshua Evans won the elections. How much will it affect Italy?', 'Donald Trump won the elections. How much will it affect India?')
+
+----
+1.0 ('"Why were the Viet Cong’s called ""Charlie""?"', '"Why were members of the Viet Cong nicknamed ""Charlie""?"')
+1.0 ('"Why were the Viet Cong’s called ""Charlie""?"', '"Why were members of the Viet Cong nicknamed ""Derek""?"')
+1.0 ('"Why were the Viet Cong’s called ""Charlie""?"', '"Why were members of the Viet Cong nicknamed ""Alex""?"')
+
+----
+1.0 ("Why didn't Jesus fulfill all the messianic prophecies?", 'Why didn’t Jesus fulfill all of the messianic prophecies?')
+1.0 ("Why didn't Jesus fulfill all the messianic prophecies?", 'Why didn’t Brandon fulfill all of the messianic prophecies?')
+1.0 ("Why didn't Jesus fulfill all the messianic prophecies?", 'Why didn’t Alex fulfill all of the messianic prophecies?')
+
+----
+
+
+Change location in one of the questions
+Test cases:      1386
+After filtering: 1039 (75.0%)
+Fails (rate):    960 (92.4%)
+
+Example fails:
+1.0 ("What's the most unfortunate thing happening to India?", 'What is the most unfortunate thing happened to India?')
+1.0 ("What's the most unfortunate thing happening to India?", 'What is the most unfortunate thing happened to Bahrain?')
+1.0 ("What's the most unfortunate thing happening to Sudan?", 'What is the most unfortunate thing happened to India?')
+
+----
+0.9 ('Which is a better option in career growth : SalesForce or ServiceNow, considering all the aspects which includes scope, job opportunities in India?', 'Is there any scope after doing MBA in India? Is doing MBA and getting a job better than bank manager as a career option?')
+0.7 ('Which is a better option in career growth : SalesForce or ServiceNow, considering all the aspects which includes scope, job opportunities in India?', 'Is there any scope after doing MBA in Australia? Is doing MBA and getting a job better than bank manager as a career option?')
+0.7 ('Which is a better option in career growth : SalesForce or ServiceNow, considering all the aspects which includes scope, job opportunities in India?', 'Is there any scope after doing MBA in Nigeria? Is doing MBA and getting a job better than bank manager as a career option?')
+
+----
+1.0 ('What are the differences between China and western table manner?', 'What do you think about the difference of table manners between China and Western culture?')
+1.0 ('What are the differences between China and western table manner?', 'What do you think about the difference of table manners between Japan and Western culture?')
+1.0 ('What are the differences between Japan and western table manner?', 'What do you think about the difference of table manners between China and Western culture?')
+
+----
+
+
+Change numbers in one of the questions
+Test cases:      1500
+After filtering: 1015 (67.7%)
+Fails (rate):    982 (96.7%)
+
+Example fails:
+0.9 ('What will be the replacement for the ISS when it is shutdown in 2024?', 'Will bigelow commercial space station be the substitute of the ISS in 2024?')
+1.0 ('What will be the replacement for the ISS when it is shutdown in 2024?', 'Will bigelow commercial space station be the substitute of the ISS in 2072?')
+1.0 ('What will be the replacement for the ISS when it is shutdown in 2024?', 'Will bigelow commercial space station be the substitute of the ISS in 2056?')
+
+----
+1.0 ('How can I make every day $10 online?', 'How can I make 10 dollars a day online?')
+1.0 ('How can I make every day $9 online?', 'How can I make 10 dollars a day online?')
+1.0 ('How can I make every day $10 online?', 'How can I make 11 dollars a day online?')
+
+----
+1.0 ('A man covers 1/3rd of journey by cycle at 50 Km/h, the next 1/3 by car at 30 km/h, rest walking at 7 km/h. average speed during the whole journey.?', 'If a person covers 1/3rd of his journey by cycle at 50, the next 1/3rd by car at 30 kmph and the rest by walking at 7 km/h, what is his average speed during the whole journey?')
+1.0 ('A man covers 1/3rd of journey by cycle at 50 Km/h, the next 1/3 by car at 30 km/h, rest walking at 8 km/h. average speed during the whole journey.?', 'If a person covers 1/3rd of his journey by cycle at 50, the next 1/3rd by car at 30 kmph and the rest by walking at 7 km/h, what is his average speed during the whole journey?')
+1.0 ('A man covers 1/3rd of journey by cycle at 50 Km/h, the next 1/3 by car at 30 km/h, rest walking at 8 km/h. average speed during the whole journey.?', 'If a person covers 1/3rd of his journey by cycle at 50, the next 1/3rd by car at 30 kmph and the rest by walking at 7 km/h, what is his average speed during the whole journey?')
+
+----
+
+
+Keep entitites, fill in with gibberish
+Test cases:      500
+Fails (rate):    306 (61.2%)
+
+Example fails:
+0.3 ('What are the famous theorems of Srinivasa Ramanujan?', 'Is Ramanujan overrated as a mathematician?')
+0.9 ('What are the famous theorems of Srinivasa Ramanujan?', 'What is Srinivasa Ramanujan?')
+0.8 ('What are the famous theorems of Srinivasa Ramanujan?', 'What was Srinivasa Ramanujan?')
+
+----
+0.8 ('What is the idea behind the name Quora?', 'Why is Quora called Quora?')
+1.0 ('Why is Quora called Quora?', 'Why should Quora answer Quora?')
+1.0 ('Why is Quora called Quora?', 'Why did Quora ask Quora?')
+
+----
+0.6 ('What brand of toilet paper does the Queen of England use?', 'What does Queen Elizabeth do?')
+0.9 ('What does Queen Elizabeth do?', 'What is Queen Elizabeth?')
+0.9 ('What does Queen Elizabeth do?', 'What Is Queen Elizabeth?')
+
+----
+
+
+
+
+Temporal
+
+Is person X != Did person use to be X
+Test cases:      999
+Fails (rate):    999 (100.0%)
+
+Example fails:
+1.0 ('Is Tyler Baker an adviser?', 'Did Tyler Baker use to be an adviser?')
+----
+0.9 ('Is Thomas Martinez an academic?', 'Did Thomas Martinez use to be an academic?')
+----
+1.0 ('Is Joseph Murphy an accountant?', 'Did Joseph Murphy use to be an accountant?')
+----
+
+
+Is person X != Is person becoming X
+Test cases:      1000
+Fails (rate):    1000 (100.0%)
+
+Example fails:
+1.0 ('Is Erin Diaz a photographer?', 'Is Erin Diaz becoming a photographer?')
+----
+1.0 ('Is Thomas Rivera an author?', 'Is Thomas Rivera becoming an author?')
+----
+1.0 ('Is Thomas Cook an analyst?', 'Is Thomas Cook becoming an analyst?')
+----
+
+
+What was person's life before becoming X != What was person's life after becoming X
+Test cases:      1000
+Fails (rate):    1000 (100.0%)
+
+Example fails:
+1.0 ("What was Emma Scott's life before becoming a journalist?", "What was Emma Scott's life after becoming a journalist?")
+----
+1.0 ("What was Jessica Cook's life before becoming an agent?", "What was Jessica Cook's life after becoming an agent?")
+----
+1.0 ("What was Samantha Myers's life before becoming an agent?", "What was Samantha Myers's life after becoming an agent?")
+----
+
+
+Do you have to X your dog before Y it != Do you have to X your dog after Y it.
+Test cases:      1000
+Fails (rate):    1000 (100.0%)
+
+Example fails:
+1.0 ('Do you have to examine your cat before touching it?', 'Do you have to examine your cat after touching it?')
+----
+1.0 ('Do you have to examine your hamster before feeding it?', 'Do you have to examine your hamster after feeding it?')
+----
+1.0 ('Do you have to meet your hamster before naming it?', 'Do you have to meet your hamster after naming it?')
+----
+
+
+Is it {ok, dangerous, ...} to {smoke, rest, ...} after != before
+Test cases:      1000
+Fails (rate):    1000 (100.0%)
+
+Example fails:
+1.0 ('Is it wrong to party before 1am?', 'Is it wrong to party after 1am?')
+----
+1.0 ('Is it normal to text before 5am?', 'Is it normal to text after 5am?')
+----
+1.0 ('Is it wrong to drink before 2pm?', 'Is it wrong to drink after 2pm?')
+----
+
+
+
+
+Negation
+
+How can I become a X person != How can I become a person who is not X
+Test cases:      1000
+Fails (rate):    975 (97.5%)
+
+Example fails:
+1.0 ('How can I become a not person?', 'How can I become a person who is not not?')
+----
+1.0 ('How can I become a fulfilled person?', 'How can I become a person who is not fulfilled?')
+----
+1.0 ('How can I become a disturbed person?', 'How can I become a person who is not disturbed?')
+----
+
+
+Is it {ok, dangerous, ...} to {smoke, rest, ...} in country != Is it {ok, dangerous, ...} not to {smoke, rest, ...} in country
+Test cases:      1000
+Fails (rate):    1000 (100.0%)
+
+Example fails:
+1.0 ('Is it reasonable to surf in Micronesia?', 'Is it reasonable not to surf in Micronesia?')
+----
+1.0 ('Is it healthy to campaign in Timor-Leste?', 'Is it healthy not to campaign in Timor-Leste?')
+----
+1.0 ('Is it healthy to shoot in Malawi?', 'Is it healthy not to shoot in Malawi?')
+----
+
+
+What are things a {noun} should worry about != should not worry about.
+Test cases:      1000
+Fails (rate):    1000 (100.0%)
+
+Example fails:
+1.0 ('What are things an artist should worry about?', 'What are things an artist should not worry about?')
+----
+1.0 ('What are things a nurse should worry about?', 'What are things a nurse should not worry about?')
+----
+1.0 ('What are things an actress should worry about?', 'What are things an actress should not worry about?')
+----
+
+
+How can I become a X person == How can I become a person who is not antonym(X)
+Test cases:      2000
+Fails (rate):    313 (15.7%)
+
+Example fails:
+0.4 ('How can I become a responsible person?', 'How can I become a person who is not irresponsible?')
+----
+0.3 ('How can I become a powerful person?', 'How can I become a person who is not powerless?')
+----
+0.4 ('How can I become a patient person?', 'How can I become a person who is not impatient?')
+----
+
+
+
+
+Coref
+
+Simple coref: he and she
+Test cases:      2000
+Fails (rate):    2000 (100.0%)
+
+Example fails:
+1.0 ('If Sarah and Marcus were alone, do you think he would reject her?', 'If Sarah and Marcus were alone, do you think she would reject him?')
+----
+1.0 ('If Thomas and Karen were alone, do you think he would reject her?', 'If Thomas and Karen were alone, do you think she would reject him?')
+----
+1.0 ('If Brianna and Christopher were alone, do you think he would reject her?', 'If Brianna and Christopher were alone, do you think she would reject him?')
+----
+
+
+Simple coref: his and her
+Test cases:      2000
+Fails (rate):    2000 (100.0%)
+
+Example fails:
+1.0 ('If Anthony and Catherine were married, would her family be happy?', "If Anthony and Catherine were married, would Anthony's family be happy?")
+----
+1.0 ('If Patrick and Michelle were married, would his family be happy?', "If Patrick and Michelle were married, would Michelle's family be happy?")
+----
+1.0 ('If Richard and Jamie were married, would his family be happy?', "If Richard and Jamie were married, would Jamie's family be happy?")
+----
+
+
+
+
+SRL
+
+Who do X think - Who is the ... according to X
+Test cases:      1000
+Fails (rate):    0 (0.0%)
+
+
+Order does not matter for comparison
+Test cases:      990
+Fails (rate):    0 (0.0%)
+
+
+Order does not matter for symmetric relations
+Test cases:      990
+Fails (rate):    0 (0.0%)
+
+
+Order does matter for asymmetric relations
+Test cases:      988
+Fails (rate):    0 (0.0%)
+
+
+traditional SRL: active / passive swap
+Test cases:      1000
+Fails (rate):    0 (0.0%)
+
+
+traditional SRL: wrong active / passive swap
+Test cases:      1000
+Fails (rate):    1000 (100.0%)
+
+Example fails:
+1.0 ('Did Sarah purchase the rifle?', 'Was Sarah purchased by the rifle?')
+----
+1.0 ('Did Nathan like the school?', 'Was Nathan liked by the school?')
+----
+1.0 ('Did Samantha remember the book?', 'Was Samantha remembered by the book?')
+----
+
+
+traditional SRL: active / passive swap with people
+Test cases:      990
+Fails (rate):    0 (0.0%)
+
+
+traditional SRL: wrong active / passive swap with people
+Test cases:      989
+Fails (rate):    989 (100.0%)
+
+Example fails:
+1.0 ('Does Danielle love Alyssa?', 'Is Danielle loved by Alyssa?')
+----
+1.0 ('Does Timothy dislike Charles?', 'Is Timothy disliked by Charles?')
+----
+1.0 ('Does Joshua notice Justin?', 'Is Joshua noticed by Justin?')
+----
+
+
+
+
+Logic
+
+A or B is not the same as C and D
+Test cases:      828
+Fails (rate):    491 (59.3%)
+
+Example fails:
+0.7 ('Is Amanda Jenkins an administrator or an organizer?', 'Is Amanda Jenkins simultaneously an intern and an architect?')
+----
+0.7 ('Is Olivia Brown an accountant or an artist?', 'Is Olivia Brown simultaneously a photographer and an intern?')
+----
+0.5 ('Is Abigail Rodriguez an editor or an advisor?', 'Is Abigail Rodriguez simultaneously an escort and an activist?')
+----
+
+
+A or B is not the same as A and B
+Test cases:      971
+Fails (rate):    971 (100.0%)
+
+Example fails:
+1.0 ('Is Steven Cooper an author or a historian?', 'Is Steven Cooper simultaneously an author and a historian?')
+----
+1.0 ('Is Christina Flores a nurse or an investigator?', 'Is Christina Flores simultaneously a nurse and an investigator?')
+----
+1.0 ('Is Sara Cox an organizer or an administrator?', 'Is Sara Cox simultaneously an organizer and an administrator?')
+----
+
+
+A and / or B is the same as B and / or A
+Test cases:      970
+Fails (rate):    0 (0.0%)
+
+
+a {nationality} {profession} = a {profession} and {nationality}
+Test cases:      1000
+Fails (rate):    0 (0.0%)
+
+
+Reflexivity: (q, q) should be duplicate
+Test cases:      1000
+Fails (rate):    0 (0.0%)
+
+
+Symmetry: f(a, b) = f(b, a)
+Test cases:      500
+Fails (rate):    30 (6.0%)
+
+Example fails:
+0.4 ('Teenagers and Teenage Years: What does it feel like to be in 12th grade?', "What is the worst feeling ever in a teenager's life?")
+1.0 ("What is the worst feeling ever in a teenager's life?", 'Teenagers and Teenage Years: What does it feel like to be in 12th grade?')
+
+----
+0.4 ('Do boys cry for their lost love? If a boy cries for a girl, what does it mean?', "How do you know if you're in love?")
+0.6 ("How do you know if you're in love?", 'Do boys cry for their lost love? If a boy cries for a girl, what does it mean?')
+
+----
+0.7 ('Who provides photo booths for hire in Sydney?', 'Where can I find best photo booth Company in Sydney?')
+0.4 ('Where can I find best photo booth Company in Sydney?', 'Who provides photo booths for hire in Sydney?')
+
+----
+
+
+Testing implications
+Test cases:      8328
+After filtering: 7080 (85.0%)
+Fails (rate):    1282 (18.1%)
+
+Example fails:
+0.3 ('Can you help me with tips for a successful long distance relationship?', 'How do we can remain satisfied in a long distance relationship?')
+0.5 ('Can you help me with tips for a successful long distance relationship?', 'What does it take for a successful long distance relationship?')
+0.7 ('How do we can remain satisfied in a long distance relationship?', 'What does it take for a successful long distance relationship?')
+
+----
+0.4 ("I'm 18. How can I make money online?", 'What are the various ways through which one can earn money online?')
+0.6 ("I'm 18. How can I make money online?", 'What should I do to make money online in India?')
+0.6 ('What are the various ways through which one can earn money online?', 'What should I do to make money online in India?')
+
+----
+0.4 ('What is a good text editor?', 'What are the best text editor plugins?')
+1.0 ('What is a good text editor?', 'What is the best text editor?')
+1.0 ('What are the best text editor plugins?', 'What is the best text editor?')
+
+----

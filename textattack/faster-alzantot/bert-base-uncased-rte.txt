@@ -1,0 +1,147 @@
+textattack: Loading datasets dataset glue, subset rte, split validation.
+textattack: Loading pre-trained model from HuggingFace model repository: textattack/bert-base-uncased-RTE
+/usr/local/lib/python3.6/dist-packages/torch/nn/modules/rnn.py:61: UserWarning: dropout option adds dropout after all but last recurrent layer, so non-zero dropout expects num_layers greater than 1, but got dropout=0.01 and num_layers=1
+  "num_layers={}".format(dropout, num_layers))
+textattack: Unknown if model of class <class 'transformers.models.bert.modeling_bert.BertForSequenceClassification'> compatible with goal function <class 'textattack.goal_functions.classification.untargeted_classification.UntargetedClassification'>.
+Attack(
+  (search_method): AlzantotGeneticAlgorithm(
+    (pop_size):  60
+    (max_iters):  20
+    (temp):  0.3
+    (give_up_if_no_improvement):  False
+    (post_crossover_check):  False
+    (max_crossover_retries):  20
+  )
+  (goal_function):  UntargetedClassification
+  (transformation):  WordSwapEmbedding(
+    (max_candidates):  8
+    (embedding):  WordEmbedding
+  )
+  (constraints): 
+    (0): MaxWordsPerturbed(
+        (max_percent):  0.2
+        (compare_against_original):  True
+      )
+    (1): WordEmbeddingDistance(
+        (embedding):  WordEmbedding
+        (max_mse_dist):  0.5
+        (cased):  False
+        (include_unknown_words):  True
+        (compare_against_original):  True
+      )
+    (2): LearningToWriteLanguageModel(
+        (max_log_prob_diff):  5.0
+        (compare_against_original):  True
+      )
+    (3): RepeatModification
+    (4): StopwordModification
+  (is_black_box):  True
+) 
+
+textattack: Load time: 40.64915204048157s
+  0% 0/10 [00:00<?, ?it/s]--------------------------------------------- Result 1 ---------------------------------------------
+Not_entailment (96%) --> [SKIPPED]
+
+Sentence1: The Tuesday drawing of the Italian Superenalotto game has awarded the biggest prize ever won in a betting game in Italy. The single winner of the first category prize (6 numbers guessed) will receive an amount, including the jackpot from previous un-won draws, of €72.090.405,19 (US$93 million.) The prize money will be received in full without further taxation, since taxes in prizes of that type are taken at a fixed rate by the Italian State from the money paid for the bet.
+Sentence2: Superenalotto awarded a prize of more than 72 million euros.
+
+
+[Succeeded / Failed / Total] 0 / 0 / 1:  10% 1/10 [00:00<00:00, 47.19it/s]--------------------------------------------- Result 2 ---------------------------------------------
+Entailment (95%) --> Not_entailment (75%)
+
+Sentence1: Rotorua has banned criminals with five or more dishonesty convictions from entering the Central Business District (CBD). The criminals will be issued with trespass notices banning them from the main streets of Rotorua. Eleven out of twelve councillors, including the Rotorua mayor, supported the by-law along with support from the police. Kevin Winters, Mayor of Rotorua, said "The ban also had the support of local businesses, who wanted an end to the thefts, assaults, shoplifting and other street crime on Rotorua streets. Crime was an issue in the area. Five strikes and you're out."
+Sentence2: The Central Business District (CBD) is part of Rotorua.
+
+Sentence1: Rotorua has banned criminals with five or more dishonesty convictions from entering the Central Business District (CBD). The criminals will be issued with trespass notices banning them from the main streets of Rotorua. Eleven out of twelve councillors, including the Rotorua mayor, supported the by-law along with support from the police. Kevin Winters, Mayor of Rotorua, said "The ban also had the support of local businesses, who wanted an end to the thefts, assaults, shoplifting and other street crime on Rotorua streets. Crime was an issue in the area. Five strikes and you're out."
+Sentence2: The Central Entrepreneurial District (CBD) is part of Rotorua.
+
+
+[Succeeded / Failed / Total] 1 / 0 / 2:  20% 2/10 [00:22<01:29, 11.13s/it]--------------------------------------------- Result 3 ---------------------------------------------
+Not_entailment (98%) --> Entailment (51%)
+
+Sentence1: Mrs. Bush's approval ratings have remained very high, above 80%, even as her husband's have recently dropped below 50%.
+Sentence2: 80% approve of Mr. Bush.
+
+Sentence1: Nadja. Bush's approval ratings have maintained very high, above 80%, so as her husband's have recently dip below 50%.
+Sentence2: 80% endorsement of Mr. Bush.
+
+
+[Succeeded / Failed / Total] 2 / 0 / 3:  30% 3/10 [01:06<02:34, 22.11s/it]--------------------------------------------- Result 4 ---------------------------------------------
+Not_entailment (97%) --> [SKIPPED]
+
+Sentence1: Nokia, Texas Instruments and other leading makers of mobile phones have formally complained to Brussels that Qualcomm, the US mobile chipmaker, has unfairly used its patents on 3G technologies.
+Sentence2: Texas Instruments produces mobile phones.
+
+
+[Succeeded / Failed / Total] 2 / 0 / 4:  40% 4/10 [01:06<01:39, 16.58s/it]--------------------------------------------- Result 5 ---------------------------------------------
+Entailment (91%) --> Not_entailment (74%)
+
+Sentence1: A plane crashed in North Carolina last year and most of the Blink-182 group was in there. The only survivors of the crash were DJ AM and musical partner Travis Barker. Less lucky, "Lil" Chris Baker, Barker's close friend and assistant, the Blink-182 drummer's bodyguard, Charles "Che" Still, the pilot and co-pilot died. Both AM and Barker suffered many injures, bad burns and they needed to stay in hospital for several weeks. Now AM asks $20 million in compensation for injuries he suffered. He lawsuits against plane maker Learjet and wants to gain $10 million for medical damages, lost earnings and profit and the same amount for mental and physical suffering.
+Sentence2: Travis Barker belongs to a band.
+
+Sentence1: A plane crashed in North Carolina last year and most of the Blink-182 group was in there. The only survivors of the crash were DJ AM and musical partner Travis Barker. Less lucky, "Lil" Chris Baker, Barker's close friend and assistant, the Blink-182 drummer's bodyguard, Charles "Che" Still, the pilot and co-pilot died. Both AM and Barker suffered many injures, bad burns and they needed to stay in hospital for several weeks. Now AM asks $20 million in compensation for injuries he suffered. He lawsuits against plane maker Learjet and wanting to gain $10 million for medical damages, lost earnings and profit and the same amount for mental and physical suffering.
+Sentence2: Travis Parker belongs to a band.
+
+
+[Succeeded / Failed / Total] 3 / 0 / 5:  50% 5/10 [01:33<01:33, 18.71s/it]--------------------------------------------- Result 6 ---------------------------------------------
+Entailment (72%) --> Not_entailment (81%)
+
+Sentence1: A farmer who was in contact with cows suffering from BSE -- the so-called mad cow disease -- has died from what is regarded as the human form of the disease.
+Sentence2: Bovine spongiform encephalopathy is another name for the "mad cow disease".
+
+Sentence1: A farm who was in contact with veal suffering from BSE -- the so-called mad cow disease -- has died from what is regarded as the human form of the disease.
+Sentence2: Beef spongiform encephalopathy is another name for the "mad cow disease".
+
+
+[Succeeded / Failed / Total] 4 / 0 / 6:  60% 6/10 [01:46<01:11, 17.80s/it]--------------------------------------------- Result 7 ---------------------------------------------
+Entailment (89%) --> Not_entailment (92%)
+
+Sentence1: Evans Paul, the pro-Aristide mayor of Port-au-Prince, said he had been told that the money will go to American lobbyists, politicians and journalists to campaign against the return of Aristide, Haiti's first democratically elected president
+Sentence2: Evans Paul is the mayor of Port-au-Prince.
+
+Sentence1: Evans Paul, the pro-Aristide mayor of Port-au-Prince, said he had been told that the money will go to American lobbyists, politicians and journalists to campaign against the return of Aristide, Haiti's first democratically elected president
+Sentence2: Evans Pablo is the mayor of Port-au-Prince.
+
+
+[Succeeded / Failed / Total] 5 / 0 / 7:  70% 7/10 [01:49<00:46, 15.66s/it]--------------------------------------------- Result 8 ---------------------------------------------
+Not_entailment (97%) --> [FAILED]
+
+Sentence1: Two British soldiers have been arrested in the southern Iraq city of Basra, sparking clashes outside a police station where they are being held.
+Sentence2: Two British tanks, sent to the police station where the soldiers are being held, were set alight in clashes.
+
+
+[Succeeded / Failed / Total] 5 / 1 / 8:  80% 8/10 [14:28<03:37, 108.54s/it]--------------------------------------------- Result 9 ---------------------------------------------
+Entailment (95%) --> [FAILED]
+
+Sentence1: singer and actress Britney Spears, 24, has filled papers in Los Angeles County Superior Court to divorce her husband Kevin Federline, 28. A spokeswoman for the court, Kathy Roberts stated that the papers cited irreconcilable differences" as the reason for the divorce and have, according to the courts, been legally separated as of Monday, November 6, the same day that Spears appeared on Late Night with David Letterman.
+Sentence2: Spears is to divorce from Kevin Federline.
+
+
+[Succeeded / Failed / Total] 5 / 2 / 9:  90% 9/10 [20:00<02:13, 133.41s/it]--------------------------------------------- Result 10 ---------------------------------------------
+Entailment (90%) --> Not_entailment (95%)
+
+Sentence1: U.S. forces have been engaged in intense fighting after insurgents launched simultaneous attacks in several Iraqi cities, including Fallujah and Baqubah.
+Sentence2: Fallujah and Baqubah are Iraqi cities.
+
+Sentence1: U.S. forces have been engaged in intense fighting after insurgents launched simultaneous attacks in several Iraqi cities, including Fallujah and Baqubah.
+Sentence2: Fallujah and Baqubah are Iraqi urban.
+
+
+[Succeeded / Failed / Total] 6 / 2 / 10: 100% 10/10 [20:03<00:00, 120.37s/it]
+
++-------------------------------+---------+
+| Attack Results                |         |
++-------------------------------+---------+
+| Number of successful attacks: | 6       |
+| Number of failed attacks:     | 2       |
+| Number of skipped attacks:    | 2       |
+| Original accuracy:            | 80.0%   |
+| Accuracy under attack:        | 20.0%   |
+| Attack success rate:          | 75.0%   |
+| Average perturbed word %:     | 6.16%   |
+| Average num. words per input: | 60.2    |
+| Avg num queries:              | 1905.62 |
++-------------------------------+---------+
+textattack: Attack time: 1203.6592066287994s
+CPU times: user 2.31 s, sys: 404 ms, total: 2.72 s
+Wall time: 20min 54s

@@ -1,0 +1,153 @@
+textattack: Loading datasets dataset glue, subset rte, split validation.
+textattack: Loading pre-trained model from HuggingFace model repository: textattack/albert-base-v2-RTE
+Using /tmp/tfhub_modules to cache modules.
+Downloading TF-Hub Module 'https://tfhub.dev/google/universal-sentence-encoder/4'.
+Downloaded https://tfhub.dev/google/universal-sentence-encoder/4, Total size: 987.47MB
+Downloaded TF-Hub Module 'https://tfhub.dev/google/universal-sentence-encoder/4'.
+textattack: Unknown if model of class <class 'transformers.models.albert.modeling_albert.AlbertForSequenceClassification'> compatible with goal function <class 'textattack.goal_functions.classification.untargeted_classification.UntargetedClassification'>.
+Attack(
+  (search_method): GreedyWordSwapWIR(
+    (wir_method):  delete
+  )
+  (goal_function):  UntargetedClassification
+  (transformation):  WordSwapEmbedding(
+    (max_candidates):  50
+    (embedding):  WordEmbedding
+  )
+  (constraints): 
+    (0): WordEmbeddingDistance(
+        (embedding):  WordEmbedding
+        (min_cos_sim):  0.5
+        (cased):  False
+        (include_unknown_words):  True
+        (compare_against_original):  True
+      )
+    (1): PartOfSpeech(
+        (tagger_type):  nltk
+        (tagset):  universal
+        (allow_verb_noun_swap):  True
+        (compare_against_original):  True
+      )
+    (2): UniversalSentenceEncoder(
+        (metric):  angular
+        (threshold):  0.840845057
+        (window_size):  15
+        (skip_text_shorter_than_window):  True
+        (compare_against_original):  False
+      )
+    (3): RepeatModification
+    (4): StopwordModification
+    (5): InputColumnModification(
+        (matching_column_labels):  ['premise', 'hypothesis']
+        (columns_to_ignore):  {'premise'}
+      )
+  (is_black_box):  True
+) 
+
+textattack: Load time: 22.59069323539734s
+  0% 0/10 [00:00<?, ?it/s]--------------------------------------------- Result 1 ---------------------------------------------
+Not_entailment (98%) --> [SKIPPED]
+
+Sentence1: The Tuesday drawing of the Italian Superenalotto game has awarded the biggest prize ever won in a betting game in Italy. The single winner of the first category prize (6 numbers guessed) will receive an amount, including the jackpot from previous un-won draws, of €72.090.405,19 (US$93 million.) The prize money will be received in full without further taxation, since taxes in prizes of that type are taken at a fixed rate by the Italian State from the money paid for the bet.
+Sentence2: Superenalotto awarded a prize of more than 72 million euros.
+
+
+[Succeeded / Failed / Total] 0 / 0 / 1:  10% 1/10 [00:00<00:00, 29.30it/s]--------------------------------------------- Result 2 ---------------------------------------------
+Entailment (78%) --> Not_entailment (77%)
+
+Sentence1: Rotorua has banned criminals with five or more dishonesty convictions from entering the Central Business District (CBD). The criminals will be issued with trespass notices banning them from the main streets of Rotorua. Eleven out of twelve councillors, including the Rotorua mayor, supported the by-law along with support from the police. Kevin Winters, Mayor of Rotorua, said "The ban also had the support of local businesses, who wanted an end to the thefts, assaults, shoplifting and other street crime on Rotorua streets. Crime was an issue in the area. Five strikes and you're out."
+Sentence2: The Central Business District (CBD) is part of Rotorua.
+
+Sentence1: Rotorua has banned criminals with five or more dishonesty convictions from entering the Central Business District (ASN). The criminals will be issued with trespass notices banning them from the main streets of Rotorua. Eleven out of twelve councillors, including the Rotorua mayor, supported the by-law along with support from the police. Kevin Winters, Mayor of Rotorua, said "The ban also had the support of local businesses, who wanted an end to the thefts, assaults, shoplifting and other street crime on Rotorua streets. Crime was an issue in the area. Five strikes and you're out."
+Sentence2: The Central Business District (CBD) is part of Rotorua.
+
+
+[Succeeded / Failed / Total] 1 / 0 / 2:  20% 2/10 [00:04<00:16,  2.11s/it]--------------------------------------------- Result 3 ---------------------------------------------
+Not_entailment (95%) --> Entailment (60%)
+
+Sentence1: Mrs. Bush's approval ratings have remained very high, above 80%, even as her husband's have recently dropped below 50%.
+Sentence2: 80% approve of Mr. Bush.
+
+Sentence1: Mrs. Bush's approval rating have remained very supremo, above 80%, even as her husband's possesses recently dropped below 50%.
+Sentence2: 80% approvals of Mr. Bush.
+
+
+[Succeeded / Failed / Total] 2 / 0 / 3:  30% 3/10 [00:07<00:17,  2.48s/it]--------------------------------------------- Result 4 ---------------------------------------------
+Not_entailment (89%) --> [SKIPPED]
+
+Sentence1: Nokia, Texas Instruments and other leading makers of mobile phones have formally complained to Brussels that Qualcomm, the US mobile chipmaker, has unfairly used its patents on 3G technologies.
+Sentence2: Texas Instruments produces mobile phones.
+
+
+[Succeeded / Failed / Total] 2 / 0 / 4:  40% 4/10 [00:07<00:11,  1.87s/it]--------------------------------------------- Result 5 ---------------------------------------------
+Not_entailment (67%) --> [SKIPPED]
+
+Sentence1: A plane crashed in North Carolina last year and most of the Blink-182 group was in there. The only survivors of the crash were DJ AM and musical partner Travis Barker. Less lucky, "Lil" Chris Baker, Barker's close friend and assistant, the Blink-182 drummer's bodyguard, Charles "Che" Still, the pilot and co-pilot died. Both AM and Barker suffered many injures, bad burns and they needed to stay in hospital for several weeks. Now AM asks $20 million in compensation for injuries he suffered. He lawsuits against plane maker Learjet and wants to gain $10 million for medical damages, lost earnings and profit and the same amount for mental and physical suffering.
+Sentence2: Travis Barker belongs to a band.
+
+
+[Succeeded / Failed / Total] 2 / 0 / 5:  50% 5/10 [00:07<00:07,  1.50s/it]--------------------------------------------- Result 6 ---------------------------------------------
+Not_entailment (97%) --> [SKIPPED]
+
+Sentence1: A farmer who was in contact with cows suffering from BSE -- the so-called mad cow disease -- has died from what is regarded as the human form of the disease.
+Sentence2: Bovine spongiform encephalopathy is another name for the "mad cow disease".
+
+
+[Succeeded / Failed / Total] 2 / 0 / 6:  60% 6/10 [00:07<00:05,  1.25s/it]--------------------------------------------- Result 7 ---------------------------------------------
+Entailment (90%) --> Not_entailment (97%)
+
+Sentence1: Evans Paul, the pro-Aristide mayor of Port-au-Prince, said he had been told that the money will go to American lobbyists, politicians and journalists to campaign against the return of Aristide, Haiti's first democratically elected president
+Sentence2: Evans Paul is the mayor of Port-au-Prince.
+
+Sentence1: Evans Paul, the pro-Aristide maire of Port-au-Prince, said he had been told that the money will go to American lobbyists, politicians and journalists to campaign against the return of Aristide, Haiti's first democratically elected president
+Sentence2: Evans Paul is the mayor of Port-au-Prince.
+
+
+[Succeeded / Failed / Total] 3 / 0 / 7:  70% 7/10 [00:08<00:03,  1.20s/it]--------------------------------------------- Result 8 ---------------------------------------------
+Not_entailment (97%) --> Entailment (51%)
+
+Sentence1: Two British soldiers have been arrested in the southern Iraq city of Basra, sparking clashes outside a police station where they are being held.
+Sentence2: Two British tanks, sent to the police station where the soldiers are being held, were set alight in clashes.
+
+Sentence1: Two British soldiers have been detaining in the eastward Iraq suburb of Iraqis, inflicting clashes besides a polices station where they are being organized.
+Sentence2: Two British reservoir, sent to the police station where the soldiers are being held, were setting alight in clashes.
+
+
+[Succeeded / Failed / Total] 4 / 0 / 8:  80% 8/10 [00:13<00:03,  1.69s/it]--------------------------------------------- Result 9 ---------------------------------------------
+Entailment (96%) --> Not_entailment (67%)
+
+Sentence1: singer and actress Britney Spears, 24, has filled papers in Los Angeles County Superior Court to divorce her husband Kevin Federline, 28. A spokeswoman for the court, Kathy Roberts stated that the papers cited irreconcilable differences" as the reason for the divorce and have, according to the courts, been legally separated as of Monday, November 6, the same day that Spears appeared on Late Night with David Letterman.
+Sentence2: Spears is to divorce from Kevin Federline.
+
+Sentence1: chante and actress Britney Spears, 24, has filled papers in Los Angeles County Superior Court to marrying her husband Kevin Federline, 28. A spokeswoman for the court, Kathy Roberts stated that the papers cited irreconcilable differences" as the reason for the divorce and have, according to the courts, been legally separated as of Monday, November 6, the same day that Spears appeared on Late Night with David Letterman.
+Sentence2: Spears is to divorce from Kevin Federline.
+
+
+[Succeeded / Failed / Total] 5 / 0 / 9:  90% 9/10 [00:16<00:01,  1.78s/it]--------------------------------------------- Result 10 ---------------------------------------------
+Entailment (96%) --> Not_entailment (80%)
+
+Sentence1: U.S. forces have been engaged in intense fighting after insurgents launched simultaneous attacks in several Iraqi cities, including Fallujah and Baqubah.
+Sentence2: Fallujah and Baqubah are Iraqi cities.
+
+Sentence1: U.S. forces have been engaged in intense fighting after insurgents launched simultaneous attacks in several Iraqi ville, including Fallujah and Baqubah.
+Sentence2: Fallujah and Baqubah are Iraqi cities.
+
+
+[Succeeded / Failed / Total] 6 / 0 / 10: 100% 10/10 [00:17<00:00,  1.70s/it]
+
++-------------------------------+--------+
+| Attack Results                |        |
++-------------------------------+--------+
+| Number of successful attacks: | 6      |
+| Number of failed attacks:     | 0      |
+| Number of skipped attacks:    | 4      |
+| Original accuracy:            | 60.0%  |
+| Accuracy under attack:        | 0.0%   |
+| Attack success rate:          | 100.0% |
+| Average perturbed word %:     | 8.25%  |
+| Average num. words per input: | 60.2   |
+| Avg num queries:              | 142.17 |
++-------------------------------+--------+
+textattack: Attack time: 17.033098220825195s
+CPU times: user 93.1 ms, sys: 19.7 ms, total: 113 ms
+Wall time: 50.5 s

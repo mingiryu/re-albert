@@ -1,0 +1,13 @@
+Not_entailment (98%) --> Entailment (51%)
+
+Sentence1: Mrs. Bush's approval ratings have remained very high, above 80%, even as her husband's have recently dropped below 50%.
+Sentence2: 80% approve of Mr. Bush.
+
+Sentence1: Nadja. Bush's approval ratings have maintained very high, above 80%, so as her husband's have recently dip below 50%.
+Sentence2: 80% endorsement of Mr. Bush.
+
+
+Not_entailment (95%) --> [FAILED]
+
+Sentence1: Mrs. Bush's approval ratings have remained very high, above 80%, even as her husband's have recently dropped below 50%.
+Sentence2: 80% approve of Mr. Bush.

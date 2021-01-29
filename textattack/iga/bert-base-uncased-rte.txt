@@ -1,0 +1,147 @@
+textattack: Loading datasets dataset glue, subset rte, split validation.
+textattack: Loading pre-trained model from HuggingFace model repository: textattack/bert-base-uncased-RTE
+textattack: Unknown if model of class <class 'transformers.models.bert.modeling_bert.BertForSequenceClassification'> compatible with goal function <class 'textattack.goal_functions.classification.untargeted_classification.UntargetedClassification'>.
+Attack(
+  (search_method): ImprovedGeneticAlgorithm(
+    (pop_size):  60
+    (max_iters):  20
+    (temp):  0.3
+    (give_up_if_no_improvement):  False
+    (post_crossover_check):  False
+    (max_crossover_retries):  20
+    (max_replace_times_per_index):  5
+  )
+  (goal_function):  UntargetedClassification
+  (transformation):  WordSwapEmbedding(
+    (max_candidates):  50
+    (embedding):  WordEmbedding
+  )
+  (constraints): 
+    (0): MaxWordsPerturbed(
+        (max_percent):  0.2
+        (compare_against_original):  True
+      )
+    (1): WordEmbeddingDistance(
+        (embedding):  WordEmbedding
+        (max_mse_dist):  0.5
+        (cased):  False
+        (include_unknown_words):  True
+        (compare_against_original):  False
+      )
+    (2): StopwordModification
+  (is_black_box):  True
+) 
+
+textattack: Load time: 21.670477390289307s
+  0% 0/10 [00:00<?, ?it/s]--------------------------------------------- Result 1 ---------------------------------------------
+Not_entailment (96%) --> [SKIPPED]
+
+Sentence1: The Tuesday drawing of the Italian Superenalotto game has awarded the biggest prize ever won in a betting game in Italy. The single winner of the first category prize (6 numbers guessed) will receive an amount, including the jackpot from previous un-won draws, of €72.090.405,19 (US$93 million.) The prize money will be received in full without further taxation, since taxes in prizes of that type are taken at a fixed rate by the Italian State from the money paid for the bet.
+Sentence2: Superenalotto awarded a prize of more than 72 million euros.
+
+
+[Succeeded / Failed / Total] 0 / 0 / 1:  10% 1/10 [00:00<00:00, 32.80it/s]--------------------------------------------- Result 2 ---------------------------------------------
+Entailment (95%) --> Not_entailment (96%)
+
+Sentence1: Rotorua has banned criminals with five or more dishonesty convictions from entering the Central Business District (CBD). The criminals will be issued with trespass notices banning them from the main streets of Rotorua. Eleven out of twelve councillors, including the Rotorua mayor, supported the by-law along with support from the police. Kevin Winters, Mayor of Rotorua, said "The ban also had the support of local businesses, who wanted an end to the thefts, assaults, shoplifting and other street crime on Rotorua streets. Crime was an issue in the area. Five strikes and you're out."
+Sentence2: The Central Business District (CBD) is part of Rotorua.
+
+Sentence1: Rotorua has banned criminals with five or more dishonesty priors from entering the Central Business District (CBD). The criminals will be issued with trespass notices banning them from the main streets of Rotorua. Eleven out of twelve councillors, including the Rotorua mayor, supported the by-law along with support from the police. Kevin Winters, Mayor of Rotorua, said "The ban also had the support of local businesses, who wanted an end to the thefts, assaults, shoplifting and other street crime on Rotorua streets. Crime was an issue in the area. Five strikes and you're out."
+Sentence2: The Central Business Arrondissement (CBD) is part of Rotorua.
+
+
+[Succeeded / Failed / Total] 1 / 0 / 2:  20% 2/10 [00:31<02:07, 15.94s/it]--------------------------------------------- Result 3 ---------------------------------------------
+Not_entailment (98%) --> Entailment (52%)
+
+Sentence1: Mrs. Bush's approval ratings have remained very high, above 80%, even as her husband's have recently dropped below 50%.
+Sentence2: 80% approve of Mr. Bush.
+
+Sentence1: Mrs. Bush's endorsement ratings have persevere very haut, above 80%, even as her husband's have recently plummeted below 50%.
+Sentence2: 80% endorsement of Mr. Bush.
+
+
+[Succeeded / Failed / Total] 2 / 0 / 3:  30% 3/10 [01:55<04:29, 38.45s/it]--------------------------------------------- Result 4 ---------------------------------------------
+Not_entailment (97%) --> [SKIPPED]
+
+Sentence1: Nokia, Texas Instruments and other leading makers of mobile phones have formally complained to Brussels that Qualcomm, the US mobile chipmaker, has unfairly used its patents on 3G technologies.
+Sentence2: Texas Instruments produces mobile phones.
+
+
+[Succeeded / Failed / Total] 2 / 0 / 4:  40% 4/10 [01:55<02:53, 28.84s/it]--------------------------------------------- Result 5 ---------------------------------------------
+Entailment (91%) --> Not_entailment (97%)
+
+Sentence1: A plane crashed in North Carolina last year and most of the Blink-182 group was in there. The only survivors of the crash were DJ AM and musical partner Travis Barker. Less lucky, "Lil" Chris Baker, Barker's close friend and assistant, the Blink-182 drummer's bodyguard, Charles "Che" Still, the pilot and co-pilot died. Both AM and Barker suffered many injures, bad burns and they needed to stay in hospital for several weeks. Now AM asks $20 million in compensation for injuries he suffered. He lawsuits against plane maker Learjet and wants to gain $10 million for medical damages, lost earnings and profit and the same amount for mental and physical suffering.
+Sentence2: Travis Barker belongs to a band.
+
+Sentence1: A plane crashed in North Carolina last year and most of the Blink-182 group was in there. The only survivors of the crash were DJ AM and musical partner Travis Barker. Less lucky, "Lil" Chris Baker, Barker's close friend and assistant, the Blink-182 drummer's bodyguard, Charles "Che" Still, the pilot and co-pilot died. Both AM and Barker suffered many injures, bad burns and they needed to stay in hospital for several weeks. Now AM asks $20 million in compensation for injuries he suffered. He lawsuits against plane maker Learjet and wants to gain $10 million for medical damages, lost earnings and profit and the same amount for mental and physical suffering.
+Sentence2: Travis Barker belongs to a banda.
+
+
+[Succeeded / Failed / Total] 3 / 0 / 5:  50% 5/10 [03:31<03:31, 42.35s/it]--------------------------------------------- Result 6 ---------------------------------------------
+Entailment (72%) --> Not_entailment (94%)
+
+Sentence1: A farmer who was in contact with cows suffering from BSE -- the so-called mad cow disease -- has died from what is regarded as the human form of the disease.
+Sentence2: Bovine spongiform encephalopathy is another name for the "mad cow disease".
+
+Sentence1: A farmer who was in contact with cows suffering from BSE -- the so-called mad cow disease -- has died from what is regarded as the human form of the disease.
+Sentence2: Bovine spongiform encephalopathy is another name for the "livid cow disease".
+
+
+[Succeeded / Failed / Total] 4 / 0 / 6:  60% 6/10 [03:35<02:23, 35.94s/it]--------------------------------------------- Result 7 ---------------------------------------------
+Entailment (89%) --> Not_entailment (97%)
+
+Sentence1: Evans Paul, the pro-Aristide mayor of Port-au-Prince, said he had been told that the money will go to American lobbyists, politicians and journalists to campaign against the return of Aristide, Haiti's first democratically elected president
+Sentence2: Evans Paul is the mayor of Port-au-Prince.
+
+Sentence1: Evans Paul, the pro-Aristide mayor of Port-au-Prince, said he had been told that the money will go to American lobbyists, politicians and journalists to campaign against the return of Aristide, Haiti's first democratically elected president
+Sentence2: Evans Paul is the maire of Port-au-Prince.
+
+
+[Succeeded / Failed / Total] 5 / 0 / 7:  70% 7/10 [03:38<01:33, 31.20s/it]--------------------------------------------- Result 8 ---------------------------------------------
+Not_entailment (97%) --> Entailment (71%)
+
+Sentence1: Two British soldiers have been arrested in the southern Iraq city of Basra, sparking clashes outside a police station where they are being held.
+Sentence2: Two British tanks, sent to the police station where the soldiers are being held, were set alight in clashes.
+
+Sentence1: Two British solider have been captured in the southern Iraq city of Basra, sparking clashes outboard a police station where they are being held.
+Sentence2: Two British tanks, sent to the policing station where the soldiers are being held, were set alight in clashes.
+
+
+[Succeeded / Failed / Total] 6 / 0 / 8:  80% 8/10 [03:56<00:59, 29.53s/it]--------------------------------------------- Result 9 ---------------------------------------------
+Entailment (95%) --> Not_entailment (69%)
+
+Sentence1: singer and actress Britney Spears, 24, has filled papers in Los Angeles County Superior Court to divorce her husband Kevin Federline, 28. A spokeswoman for the court, Kathy Roberts stated that the papers cited irreconcilable differences" as the reason for the divorce and have, according to the courts, been legally separated as of Monday, November 6, the same day that Spears appeared on Late Night with David Letterman.
+Sentence2: Spears is to divorce from Kevin Federline.
+
+Sentence1: singer and actress Aguilera Lances, 24, has filled papers in Los Angeles County Superior Court to divorce her husband Kevin Federline, 28. A spokeswoman for the court, Kathy Roberts stated that the papers cited irreconcilable differences" as the reason for the divorce and have, according to the courts, been legally separated as of Monday, November 6, the same day that Spears appeared on Late Night with David Letterman.
+Sentence2: Harpoons is to divorce from Kevin Federline.
+
+
+[Succeeded / Failed / Total] 7 / 0 / 9:  90% 9/10 [04:22<00:29, 29.16s/it]--------------------------------------------- Result 10 ---------------------------------------------
+Entailment (90%) --> Not_entailment (98%)
+
+Sentence1: U.S. forces have been engaged in intense fighting after insurgents launched simultaneous attacks in several Iraqi cities, including Fallujah and Baqubah.
+Sentence2: Fallujah and Baqubah are Iraqi cities.
+
+Sentence1: U.S. forces have been engaged in intense fighting after insurgents launched simultaneous attacks in several Iraqi cities, including Fallujah and Baqubah.
+Sentence2: Fallujah and Baqubah are Iraqi townships.
+
+
+[Succeeded / Failed / Total] 8 / 0 / 10: 100% 10/10 [04:26<00:00, 26.67s/it]
+
++-------------------------------+---------+
+| Attack Results                |         |
++-------------------------------+---------+
+| Number of successful attacks: | 8       |
+| Number of failed attacks:     | 0       |
+| Number of skipped attacks:    | 2       |
+| Original accuracy:            | 80.0%   |
+| Accuracy under attack:        | 0.0%    |
+| Attack success rate:          | 100.0%  |
+| Average perturbed word %:     | 5.67%   |
+| Average num. words per input: | 60.2    |
+| Avg num queries:              | 2466.88 |
++-------------------------------+---------+
+textattack: Attack time: 266.6768047809601s
+CPU times: user 323 ms, sys: 59 ms, total: 382 ms
+Wall time: 5min 4s
