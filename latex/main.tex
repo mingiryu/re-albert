@@ -1,0 +1,976 @@
+\documentclass{article}
+
+% if you need to pass options to natbib, use, e.g.:
+\PassOptionsToPackage{numbers, compress}{natbib}
+% before loading neurips_2019
+
+% ready for submission
+% \usepackage{neurips_2019}
+
+% to compile a preprint version, e.g., for submission to arXiv, add add the
+% [preprint] option:
+%     \usepackage[preprint]{neurips_2019}
+
+% to compile a camera-ready version, add the [final] option, e.g.:
+\usepackage[final]{neurips_2019}
+
+% to avoid loading the natbib package, add option nonatbib:
+%     \usepackage[nonatbib]{neurips_2019}
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{graphicx}       % images
+\usepackage{multirow}       % merged table rows
+\usepackage[dvipsnames]{xcolor} % text color
+\usepackage[nomarkers,nolists]{endfloat} % delayed tables and images
+\usepackage{threeparttable} % better table footnote
+\usepackage[capposition=top]{floatrow} % image footnote
+
+\graphicspath{ {./images/} } % automatically load images by default
+\renewcommand{\efloatseparator}{\mbox{}} % allows tables to share a page
+
+\title{[RE] ALBERT: A Lite BERT for Self-supervised Learning of Language Representations}
+
+% The \author macro works with any number of authors. There are two commands
+% used to separate the names and addresses of multiple authors: \And and \AND.
+%
+% Using \And between authors leaves it to LaTeX to determine where to break the
+% lines. Using \AND forces a line break at that point. So, if LaTeX puts 3 of 4
+% authors names on the first line, and the last on the second line, try using
+% \AND instead of \And before the third author name.
+
+\author{%
+  Mingi Ryu \\
+  University of Illinois at Urbana-Champaign\\
+  \texttt{mingir2@illinois.edu} \\
+  % examples of more authors
+  % \And
+  % Coauthor \\
+  % Affiliation \\
+  % Address \\
+  % \texttt{email} \\
+  % \AND
+  % Coauthor \\
+  % Affiliation \\
+  % Address \\
+  % \texttt{email} \\
+  % \And
+  % Coauthor \\
+  % Affiliation \\
+  % Address \\
+  % \texttt{email} \\
+  % \And
+  % Coauthor \\
+  % Affiliation \\
+  % Address \\
+  % \texttt{email} \\
+}
+
+\begin{document}
+
+\maketitle
+
+\section*{\centering Reproducibility Summary}
+
+\textit{In this report, in-depth comparisons between BERT and ALBERT are made using various open-source interpretability and testing tools to verify the claim that ALBERT achieves better performance and faster inference compared to BERT. ALBERT achieves higher benchmarks across many different downstream tasks and demonstrates appropriate sentence embeddings visualization. However, experiment results from behavioral testings and adversarial attacks suggest that ALBERT has relatively worse capabilities, particularly in terms of Robustness and Fairness.
+}
+
+\subsection*{Scope of Reproducibility}
+
+\citet{Lan2020ALBERT} attributes improved parameter efficiency as the most important advantage of ALBERT’s design choices and claims substantial improvements for several GLUE and other downstream evaluation tasks. Thanks to the prevalence of established full re-implementations and standardized models, model interpretability testing tools were used to perform in-depth comparisons beyond traditional benchmarks.
+
+
+\subsection*{Methodology}
+
+Fine-tuned models were obtained from HuggingFace \cite{Wolf2019HuggingFacesTS} and those released by \citet{Morris2020TextAttackAF} were used to ensure consistency across models and experiments. Most notably, SentenceTransformers \cite{reimers-gurevych-2019-sentence}, UMAP \cite{McInnes2018UMAPUM}, CheckList \cite{Ribeiro2020BeyondAB}, TextAttack \cite{Morris2020TextAttackAF}, and LIT (Language Interpretability Tool) \cite{Tenney2020TheLI}, were used for each experiments.
+
+\subsection*{Results}
+
+Based on several experiments in this report, ALBERT is qualitatively worse than BERT and has consistently slower inference speed. \textbf{Therefore, this work does not support the broad conclusion that ALBERT outperforms BERT in terms of performance and inference speed in most cases.}
+
+\subsection*{What was easy}
+
+With the standardized models from the HuggingFace's Transformers \cite{Wolf2019HuggingFacesTS}, the use of plug-and-play models in various experiments was trivial. Because all of the tools used in the experiments were open-source, it was fairly easy to debug errors and modify the source code.
+
+\subsection*{What was difficult}
+
+Reviewing the literature and writing this reproducibility report alone took a significant amount of time, notwithstanding the absence of re-implementation or training.
+
+\subsection*{Communication with original authors}
+
+Initially, We chose not to contact the original authors because we did not intend to fully re-implement the original paper. Since communication with the original authors is curucial for successful reproducibility in natural language processing, we shared our report with the authors for further discussion and potential improvements.
+
+\newpage
+
+\section{Introduction}
+
+\citet{Lan2020ALBERT} identified four major ways to "lighten" \citet{devlin-etal-2019-bert}'s original BERT architecture: cross-layer parameter sharing, sentence-order-prediction auxiliary loss, factorized embedding parameterization, and dropout removal. Typically, a replication study reproduces one or more of these claims by means of a full re-implementation. However, it did not seem reasonable to pursue the same undertaking when many re-implementations had already been carried out.
+
+In addition, full re-implementation is a time-consuming and error-prone procedure that ultimately results in the verification of the same set of metrics that prompted the need for reproducibility.
+
+With the recent developments in easy-to-use interpretability and testing tools for NLP models, state-of-the-art models can be evaluated in terms of qualitative performance in addition to existing benchmarks.
+
+\section{Scope of reproducibility}
+
+\citet{Lan2020ALBERT} claimed significant improvements over BERT for several GLUE and other downstream evaluation tasks based on the improvement of ALBERT in parameter efficiency. Simply put, \citet{Lan2020ALBERT} claimed that ALBERT is better than BERT based on benchmarks.
+
+However, comparing the performance of models based on a single aggregated statistic is problematic because it is difficult to figure out why and where the models are fail (\citet{wu-etal-2019-errudite}). By considering each model as a black-box, a qualitative comparison of model capabilities for various models can be made, even though they have been trained on different datasets (\citet{Ribeiro2020BeyondAB}).
+
+During our preliminary review, we found seven pre-existing full re-implementations of ALBERT on GitHub alone, as well as over hundreds of pre-trained and fine-tuned models via Huggingfaces's transformers (\citet{Wolf2019HuggingFacesTS}). The majority of these models indicated that the original paper's results were reproducible. However, we found no results beyond the paper.
+
+Rather than replicating ALBERT from the scratch, this report uses some of the 82 models provided by \citet{Morris2020TextAttackAF} to determine if ALBERT is actually better BERT in terms of both benchmarks and capabilities.
+
+2.1 Addressed claims from the original paper
+
+\begin{itemize}
+    \item Fine-tuned ALBERT on STS-B provides similarly or or more meaningful representation of sentence embeddings compared to BERT.
+    \item Fine-tuned ALBERT on sentiment analysis and paraphrase identification tasks have similar or better  behavioral testing results compared to BERT.
+    \item Fine-tuned ALBERT on RTE is equivalent to or more robust against adversarial attacks than BERT.
+\end{itemize}
+
+
+\section{Methodology}
+
+
+Due to the prevalence of existing re-implementations, the available fine-tuned models have been used for an in-depth comparison of BERT and ALBERT models. Beyond traditional benchmarks, visualization of sentence embeddings, behavioral testing, adversarial attacks, and counterfactual explanation experiments were carried out to verify if claims by \citet{Lan2020ALBERT} still apply under different circumstances.
+
+\subsection{Model descriptions}
+
+All models were obtained from TextAttack Model Zoo via the HuggingFace website (\url{https://huggingface.co/textattack}), re-implemented and fine-tuned by \citet{Morris2020TextAttackAF}.
+
+\subsection{Datasets}
+
+All datasets were obtained from the HuggingFace's Datasets library (\url{https://github.com/huggingface/datasets}).
+
+\subsection{Hyperparameters}
+
+Hyperparamters for the fine-tuning varies from model to model. According to \citet{Morris2020TextAttackAF}, the best out of a grid search over a bunch of possible hyperparameters was selected for each of the models.
+
+All experiments used the following additional parameters, unless otherwise specified. 
+
+\begin{itemize}
+  \item SentenceTransformers: models.Transformers(max\_seq\_length=128)
+  \item UMAP: umap.UMAP(random\_state=0, transform\_seed=0, metric='cosine')
+  \item CheckList: TestSuite.run(seed=1)
+  \item TextAttack: textattack attack --num-examples 10
+\end{itemize}
+
+
+\subsection{Experimental setup}
+
+All experiments were performed on Google Colab with a single Tesla T4 GPU (NVIDIA-SMI 450.32.03 Driver Version: 418.67 CUDA Version: 10.1). Notebooks and other artifacts are available on GitHub (\url{https://github.com/mingiryu/re-albert}).
+
+\subsection{Computational requirements}
+
+The computational requirements for each experiment ranged from a few minutes to an hour on a single GPU due to the different heuristics used for each experiment.
+
+\section{Results}
+
+ALBERT achieves higher benchmarks across many different downstream tasks and demonstrates appropriate sentence embeddings visualization. However, experiment results from behavioral testings and adversarial attacks suggest that ALBERT has relatively worse capabilities, particularly in terms of Robustness and Fairness.
+
+\subsection{Benchmarks}
+
+\begin{table}[!htbp]
+\centering
+\begin{threeparttable}[b]
+\caption{Benchmarks for Downstream Tasks}
+\begin{tabular}{ccccccccccc}
+\hline
+\multicolumn{1}{l}{Model} &
+  \multicolumn{1}{l}{AG News} &
+  \multicolumn{1}{l}{CoLA} &
+  \multicolumn{1}{l}{IMDB} &
+  \multicolumn{1}{l}{RT} &
+  \multicolumn{1}{l}{QQP} &
+  \multicolumn{1}{l}{RTE} &
+  \multicolumn{1}{l}{SNLI} &
+  \multicolumn{1}{l}{SST-2} &
+  \multicolumn{1}{l}{WNLI} &
+  \multicolumn{1}{l}{YP} \\ \hline
+BERT     & 94.20          & 81.20          & \textbf{91.90} & 84.00          & \textbf{92.40} & 72.56          & \textbf{89.40} & 92.43          & 56.34          & 96.30 \\
+ALBERT   & \textbf{94.30} & \textbf{82.90} & 91.30          & \textbf{85.10} & 91.40          & \textbf{76.17} & 88.30          & \textbf{92.55} & \textbf{59.15} & 96.30 \\
+\hline
+\end{tabular}
+\begin{tablenotes}[flushleft]
+\footnotesize 
+\item \textit{Notes:} Evaluation results for AG News, CoLA, IMDB, RT (Rotten Tomatoes), QQP, RTE, SNLI,SST-2, WNLI, and YP (Yelp Polarity) single-task BERT and ALBERT models released by TextAttack \cite{Morris2020TextAttackAF}. All results shown are on the full validation or test set up to 1000 examples. More details can be found on \url{https://textattack.readthedocs.io/en/latest/3recipes/models.html}.
+\end{tablenotes}
+\end{threeparttable}
+\label{tab:TextAttack-models-evaluation-results}
+\end{table}
+
+\citet{Morris2020TextAttackAF} provides fine-tuned textattack/bert-base-uncased and textattack/albert-base-v2 models via HuggingFace \cite{Wolf2019HuggingFacesTS}. Based on Table \ref{tab:TextAttack-models-evaluation-results}, the ALBERT models clearly outperforms the BERT models across many different downstream tasks, as \citet{Lan2020ALBERT} claimed. 
+
+
+\subsection{Embeddings visualization}
+
+bert-base-uncased-STS-B and albert-base-v2-STS-B models were chosen for this experiment because sentence embeddings of fine-tuned models have semantically more meaningful representation compared to the original pre-trained models \cite{devlin-etal-2019-bert} \cite{reimers-gurevych-2019-sentence} \cite{Rogers2020API}. The embeddings were generated using the AG News training dataset without further fine-tuning. Tvisualizations in Figure \ref{fig:sts-b-ag-news} were then created using UMAP \cite{McInnes2018UMAPUM}.
+
+Given that UMAP is agnostic to rotation or reflection of the final layout \cite{McInnes2018UMAPUM}, the results are essentially the same as the reflection in the x-axis and the 90-degree counter-clockwise rotation for the BERT visualization results in almost the same layout as the ALBERT. 
+
+However, ALBERT (10min 30s) took noticeably longer to produce the embeddings compared to BERT (8min 49s). It should be noted that the UMAP, which took 3min 52s and 4min 4s respectively, was not included.
+
+\clearpage
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{sts-b-ag-news}
+    \caption{Embedding Visualization}
+    \floatfoot{\textit{Notes:} Visualizations of bert-base-uncased-STS-B and albert-base-v2-STS-B models based on sentence embeddings generated from AG News training dataset (N=120,000).}
+    \label{fig:sts-b-ag-news}
+\end{figure}
+
+\subsection{Behavioral testing}
+
+In Table \ref{checklist-testing-results}, fine-tuned models on several sentiment analysis datasets were tested with CheckList \cite{Ribeiro2020BeyondAB}. The sentiment analysis test suite (curated by \citet{Ribeiro2020BeyondAB}) consists of Minimum Functionality test (MFT), INVariance, and DIRectional capability tests. Apart from six \emph{Negation} test cases, Table \ref{checklist-testing-results} includes all test cases for \emph{Vocabulary}, \emph{Robustness}, \emph{NER}, \emph{Fairness}, \emph{Temporal}, \emph{Negation}, and \emph{SRL} capability tests.
+
+For \emph{Vocabulary}, \emph{Negation}, and \emph{SRL}, it's difficult to make a reasonable conclusion due to the variance across different datasets. In addition, certain test cases (\emph{Single negative words} and \emph{Reducers}) have extreme outliers, which renders these tests unreliable.
+
+For \emph{Robustness}, \emph{NER}, and \emph{Fairness}, ALBERT consistently result in higher fail rates than BERT. More importantly, ALBERT have significantly worse fail rates for \emph{Fairness} in all cases except \emph{Race} on SST-2. 
+
+In Table \ref{checklist-qqp-testing-results}, fine-tuned models on two paraphrase identification datasets (QQP and MRPC) were tested with CheckList \cite{Ribeiro2020BeyondAB}. Apart from \emph{Robustness}, only the MFT test cases from the QQP test suite (curated by \citet{Ribeiro2020BeyondAB}) are included in Table \ref{checklist-qqp-testing-results}.
+
+For QQP, similar behavior is observed for \emph{Robustness}, but not for \emph{NER}. For MRPC, ALBERT achieves lower fail rates than BERT across all test cases for \emph{Robustness}. However, it seems inappropriate to use the QQP test suite for MRPC since both BERT and ALBERT have either 0.0\% or 100.0\% for the most of the capability tests in MRPC.
+
+On average, ALBERT (4m 48s and 10m 47s) took consistently longer than BERT (4m 14s and 9m 30s) to complete the test suites (sentiment analysis and QQP).
+
+\clearpage
+
+\begin{table}[!htbp]
+\centering
+\begin{threeparttable}[b]
+\caption{CheckList Test Suite for Sentiment Analysis}
+\begin{tabular}{llrrrrrr}
+\hline
+ &
+  \multicolumn{1}{r}{} &
+  \multicolumn{2}{c}{Rotten Tomatoes} &
+  \multicolumn{2}{c}{Yelp Polarity} &
+  \multicolumn{2}{c}{SST-2} \\ \hline
+Capability &
+  Test &
+  \multicolumn{1}{c}{BERT} &
+  \multicolumn{1}{c}{ALBERT} &
+  \multicolumn{1}{c}{BERT} &
+  \multicolumn{1}{c}{ALBERT} &
+  \multicolumn{1}{c}{BERT} &
+  \multicolumn{1}{c}{ALBERT} \\ \hline
+\multirow{10}{*}{Vocabulary} &
+  Single positive words &
+  100.0 &
+  100.0 &
+  100.0 &
+  100.0 &
+  100.0 &
+  100.0 \\
+ &
+  Single negative words &
+  \textbf{0.0} &
+  100.0 &
+  0.0 &
+  0.0 &
+  \textbf{0.0} &
+  2.9 \\
+ &
+  Single neutral words &
+  46.2 &
+  \textbf{0.0} &
+  100.0 &
+  \textbf{69.2} &
+  100.0 &
+  100.0 \\
+ &
+  Sentiment-laden words in context &
+  \textbf{47.9} &
+  49.1 &
+  47.9 &
+  \textbf{47.8} &
+  \textbf{48.0} &
+  49.5 \\
+ &
+  Neutral words in context &
+  82.8 &
+  \textbf{69.5} &
+  92.3 &
+  \textbf{76.4} &
+  \textbf{77.5} &
+  89.7 \\
+ &
+  Intensifiers &
+  \textbf{0.8} &
+  2.6 &
+  \textbf{2.4} &
+  4.9 &
+  \textbf{0.9} &
+  2.0 \\
+ &
+  Reducers &
+  100.0 &
+  \textbf{6.1} &
+  37.6 &
+  \textbf{28.7} &
+  33.3 &
+  \textbf{14.7} \\
+ &
+  Change neutral words with BERT &
+  \textbf{8.8} &
+  15.8 &
+  \textbf{8.8} &
+  11.2 &
+  11.8 &
+  \textbf{10.0} \\
+ &
+  Add positive phrases &
+  \textbf{18.8} &
+  30.2 &
+  \textbf{15.6} &
+  27.4 &
+  \textbf{27.4} &
+  27.8 \\
+ &
+  Add negative phrases &
+  31.2 &
+  \textbf{28.4} &
+  23.6 &
+  \textbf{22.4} &
+  25.4 &
+  \textbf{24.8} \\ \hline
+\multirow{5}{*}{Robustness} &
+  Add random URLs and handles &
+  \textbf{14.4} &
+  29.6 &
+  31.4 &
+  \textbf{27.6} &
+  14.2 &
+  \textbf{13.8} \\
+ &
+  Punctuation &
+  \textbf{6.2} &
+  18.2 &
+  \textbf{3.8} &
+  5.6 &
+  4.8 &
+  \textbf{3.8} \\
+ &
+  Typos &
+  \textbf{4.6} &
+  8.2 &
+  \textbf{4.0} &
+  6.4 &
+  7.4 &
+  \textbf{6.6} \\
+ &
+  2 typos &
+  \textbf{8.0} &
+  12.8 &
+  \textbf{5.8} &
+  8.6 &
+  \textbf{9.6} &
+  10.4 \\
+ &
+  Contractions &
+  \textbf{3.8} &
+  4.5 &
+  \textbf{5.0} &
+  5.1 &
+  \textbf{3.0} &
+  3.7 \\ \hline
+\multirow{3}{*}{NER} &
+  Change names &
+  \textbf{8.2} &
+  9.1 &
+  \textbf{18.7} &
+  20.8 &
+  \textbf{8.8} &
+  11.5 \\
+ &
+  Change locations &
+  \textbf{10.0} &
+  10.3 &
+  \textbf{23.8} &
+  27.4 &
+  \textbf{11.0} &
+  13.9 \\
+ &
+  Change numbers &
+  3.6 &
+  \textbf{3.1} &
+  \textbf{7.8} &
+  9.5 &
+  \textbf{3.0} &
+  3.8 \\ \hline
+\multirow{4}{*}{Fairness} &
+  Race &
+  \textbf{31.5} &
+  60.2 &
+  \textbf{20.7} &
+  55.8 &
+  49.2 &
+  \textbf{37.5} \\
+ &
+  Sexual &
+  \textbf{69.2} &
+  94.3 &
+  \textbf{45.5} &
+  86.3 &
+  \textbf{81.7} &
+  88.8 \\
+ &
+  Religion &
+  \textbf{32.7} &
+  84.2 &
+  \textbf{50.3} &
+  84.7 &
+  \textbf{57.8} &
+  93.5 \\
+ &
+  Nationality &
+  \textbf{8.8} &
+  52.7 &
+  \textbf{38.5} &
+  68.8 &
+  \textbf{22.2} &
+  42.3 \\ \hline
+\multirow{2}{*}{Temporal} &
+  Used to, but now &
+  \textbf{51.5} &
+  53.9 &
+  \textbf{51.0} &
+  51.2 &
+  \textbf{52.5} &
+  54.4 \\
+ &
+  "Used to" should reduce &
+  56.2 &
+  \textbf{15.1} &
+  81.2 &
+  \textbf{71.6} &
+  52.6 &
+  \textbf{52.5} \\ \hline
+\multirow{3}{*}{Negation} &
+  Negative &
+  \textbf{1.2} &
+  2.7 &
+  1.6 &
+  \textbf{0.0} &
+  \textbf{0.5} &
+  2.1 \\
+ &
+  Not negative &
+  93.9 &
+  \textbf{60.7} &
+  91.0 &
+  \textbf{81.7} &
+  95.7 &
+  \textbf{94.0} \\
+ &
+  Not neutral is still neutral &
+  \textbf{98.6} &
+  98.7 &
+  \textbf{99.6} &
+  100.0 &
+  97.2 &
+  \textbf{93.5} \\ \hline
+\multirow{5}{*}{SRL} &
+  My opinion is what matters &
+  \textbf{53.5} &
+  62.3 &
+  \textbf{51.2} &
+  51.3 &
+  \textbf{54.3} &
+  55.0 \\
+ &
+  Q \& A: yes &
+  \textbf{47.2} &
+  47.9 &
+  49.1 &
+  \textbf{48.7} &
+  \textbf{47.5} &
+  48.4 \\
+ &
+  Q \& A: yes (neutral) &
+  99.7 &
+  \textbf{94.4} &
+  91.3 &
+  \textbf{67.5} &
+  98.7 &
+  \textbf{59.0} \\
+ &
+  Q \& A: no &
+  \textbf{53.2} &
+  55.5 &
+  57.1 &
+  \textbf{54.3} &
+  53.1 &
+  \textbf{52.9} \\
+ &
+  Q \& A: no (neutral) &
+  100.0 &
+  \textbf{94.9} &
+  \textbf{99.4} &
+  100.0 &
+  100.0 &
+  100.0 \\
+ &
+   &
+   &
+   &
+   &
+   &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{l}{}
+\end{tabular}
+\begin{tablenotes}[flushleft]
+\footnotesize 
+\item \textit{Notes:} CheckList sentiment analysis test suite results for bert-base-uncased and albert-base-v2 models. The reported numbers are fail rates in \% (lower the better). For each dataset, lower fail rates are bolded for emphasis. Several tests in \emph{Negation} capability were excluded for the sake of brevity.
+\end{tablenotes}
+\end{threeparttable}
+\label{checklist-testing-results}
+\end{table}
+
+\clearpage
+
+\begin{table}[!htbp]
+\begin{threeparttable}[b]
+\caption{CheckList Test Suite for QQP}
+\centering
+\begin{tabular}{llrrrr}
+\hline
+ &
+  \multicolumn{1}{r}{} &
+  \multicolumn{2}{c}{QQP} &
+  \multicolumn{2}{c}{MRPC} \\ \hline
+Capability &
+  Test &
+  \multicolumn{1}{c}{BERT} &
+  \multicolumn{1}{c}{ALBERT} &
+  \multicolumn{1}{c}{BERT} &
+  \multicolumn{1}{c}{ALBERT} \\ \hline
+\multirow{8}{*}{Vocabulary} &
+  Modifier: adj &
+  82.3 &
+  \textbf{61.4} &
+  100.0 &
+  100.0 \\
+ &
+  Different adjectives &
+  \textbf{0.6} &
+  1.3 &
+  92.7 &
+  \textbf{58.5} \\
+ &
+  Different animals &
+  \textbf{12.1} &
+  16.2 &
+  100.0 &
+  100.0 \\
+ &
+  Irrelevant modifiers - animals &
+  0.0 &
+  0.0 &
+  0.0 &
+  0.0 \\
+ &
+  Irrelevant modifiers - people &
+  0.0 &
+  0.0 &
+  0.0 &
+  0.0 \\
+ &
+  Irrelevant preamble with different examples. &
+  99.3 &
+  \textbf{88.8} &
+  0.0 &
+  0.0 \\
+ &
+  Preamble is relevant (different injuries) &
+  \textbf{21.4} &
+  29.6 &
+  100.0 &
+  100.0 \\
+ &
+  How can I become more X != How can I become less X &
+  20.8 &
+  \textbf{13.7} &
+  100.0 &
+  100.0 \\ \hline
+\multirow{2}{*}{Taxonomy} &
+  How can I become more \{synonym\}? &
+  17.1 &
+  \textbf{10.7} &
+  0.0 &
+  0.0 \\
+ &
+  How can I become more X = How can I become less antonym(X) &
+  \textbf{57.7} &
+  70.8 &
+  0.0 &
+  0.0 \\ \hline
+\multirow{4}{*}{Robustness} &
+  Add one typo &
+  \textbf{18.0} &
+  24.2 &
+  19.2 &
+  \textbf{11.4} \\
+ &
+  Contrations &
+  \textbf{1.8} &
+  3.0 &
+  2.8 &
+  \textbf{2.4} \\
+ &
+  (q, paraphrase(q)) &
+  \textbf{56.5} &
+  61.5 &
+  86.5 &
+  \textbf{7.0} \\
+ &
+  Product of paraphrases(q1) * paraphrases(q2) &
+  \textbf{39.0} &
+  52.0 &
+  95.0 &
+  \textbf{51.0} \\ \hline
+\multirow{3}{*}{NER} &
+  Same adjectives, different people &
+  2.1 &
+  \textbf{0.0} &
+  100.0 &
+  \textbf{89.2} \\
+ &
+  Same adjectives, different people v2 &
+  20.4 &
+  \textbf{14.4} &
+  100.0 &
+  100.0 \\
+ &
+  Same adjectives, different people v3 &
+  \textbf{6.9} &
+  26.7 &
+  100.0 &
+  100.0 \\ \hline
+\multirow{7}{*}{Temporal} &
+  Is person X != Did person use to be X &
+  96.0 &
+  \textbf{82.9} &
+  100.0 &
+  100.0 \\
+ &
+  Is person X != Is person becoming X &
+  \textbf{50.1} &
+  90.6 &
+  100.0 &
+  100.0 \\
+ &
+  \begin{tabular}[c]{@{}l@{}}What was person's life before becoming X\\ != What was person's life after becoming X\end{tabular} &
+  100.0 &
+  \textbf{0.0} &
+  100.0 &
+  100.0 \\
+ &
+   &
+   &
+   &
+   &
+   \\
+ &
+  \begin{tabular}[c]{@{}l@{}}Do you have to X your dog before Y it\\ != Do you have to X your dog after Y it.\end{tabular} &
+  100.0 &
+  \textbf{43.5} &
+  100.0 &
+  100.0 \\
+ &
+   &
+   &
+   &
+   &
+   \\
+ &
+  Is it \{ok, dangerous, ...\} to \{smoke, rest, ...\} after != before &
+  99.8 &
+  \textbf{76.7} &
+  100.0 &
+  100.0 \\ \hline
+\multirow{7}{*}{Negation} &
+  \begin{tabular}[c]{@{}l@{}}How can I become a X person\\ != How can I become a person who is not X\end{tabular} &
+  6.2 &
+  \textbf{0.8} &
+  \textbf{97.5} &
+  100.0 \\
+ &
+   &
+   &
+   &
+   &
+   \\
+ &
+  \begin{tabular}[c]{@{}l@{}}Is it \{ok, dangerous, ...\} to \{smoke, rest, ...\} in country\\ != Is it \{ok, dangerous, ...\} not to \{smoke, rest, ...\} in country\end{tabular} &
+  17.7 &
+  \textbf{15.1} &
+  100.0 &
+  100.0 \\
+ &
+   &
+   &
+   &
+   &
+   \\
+ &
+  \begin{tabular}[c]{@{}l@{}}What are things a \{noun\} should worry about\\ != should not worry about.\end{tabular} &
+  0.0 &
+  0.0 &
+  100.0 &
+  100.0 \\
+ &
+   &
+   &
+   &
+   &
+   \\
+ &
+  \begin{tabular}[c]{@{}l@{}}How can I become a X person\\ == How can I become a person who is not antonym(X)\end{tabular} &
+  \textbf{77.1} &
+  92.9 &
+  15.7 &
+  \textbf{0.0} \\ \hline
+\multirow{2}{*}{Coref} &
+  Simple coref: he and she &
+  96.0 &
+  \textbf{0.1} &
+  100.0 &
+  100.0 \\
+ &
+  Simple coref: his and her &
+  99.6 &
+  \textbf{49.4} &
+  100.0 &
+  100.0 \\ \hline
+\multirow{8}{*}{SRL} &
+  Who do X think - Who is the ... according to X &
+  \textbf{6.4} &
+  9.8 &
+  0.0 &
+  0.0 \\
+ &
+  Order does not matter for comparison &
+  \textbf{78.5} &
+  100.0 &
+  0.0 &
+  0.0 \\
+ &
+  Order does not matter for symmetric relations &
+  \textbf{52.0} &
+  91.0 &
+  0.0 &
+  0.0 \\
+ &
+  Order does matter for asymmetric relations &
+  \textbf{61.5} &
+  88.2 &
+  0.0 &
+  0.0 \\
+ &
+  Traditional SRL: active / passive swap &
+  \textbf{13.9} &
+  91.4 &
+  0.0 &
+  0.0 \\
+ &
+  Traditional SRL: wrong active / passive swap &
+  \textbf{92.1} &
+  94.4 &
+  100.0 &
+  100.0 \\
+ &
+  Traditional SRL: active / passive swap with people &
+  \textbf{88.7} &
+  97.7 &
+  0.0 &
+  0.0 \\
+ &
+  Traditional SRL: wrong active / passive swap with people &
+  \textbf{95.2} &
+  96.0 &
+  100.0 &
+  100.0 \\ \hline
+\multirow{5}{*}{Logic} &
+  A or B is not the same as C and D &
+  3.9 &
+  \textbf{2.3} &
+  \textbf{59.3} &
+  82.1 \\
+ &
+  A or B is not the same as A and B &
+  100.0 &
+  \textbf{48.1} &
+  100.0 &
+  100.0 \\
+ &
+  A and / or B is the same as B and / or A &
+  \textbf{0.0} &
+  0.4 &
+  0.0 &
+  0.0 \\
+ &
+  a \{nationality\} \{profession\} = a \{profession\} and \{nationality\} &
+  0.0 &
+  0.0 &
+  0.0 &
+  0.0 \\
+ &
+  Reflexivity: (q, q) should be duplicate &
+  \textbf{0.8} &
+  1.0 &
+  0.0 &
+  0.0 \\
+ &
+   &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{l}{} &
+  \multicolumn{1}{l}{}
+\end{tabular}
+\begin{tablenotes}[flushleft]
+\footnotesize 
+\item \textit{Notes:} CheckList QQP test suite results for bert-base-uncased and albert-base-v2 models. The reported numbers are fail rates in \% (lower the better). For each dataset, lower fail rates are bolded for emphasis. Aside from Robustness, only the MFTs (Minimum Functionality test) were included for the sake of brevity.
+\end{tablenotes}
+\end{threeparttable}
+\label{checklist-qqp-testing-results}
+\end{table}
+
+\clearpage
+
+\subsection{Adversarial attack} \label{adversarial-attack}
+
+bert-base-uncased-RTE and albert-base-v2-RTE models were chosen for this experiment to perform adversarial attacks using TextAttack \cite{Morris2020TextAttackAF}. Out of \emph{fast-alzantot}, \emph{iga}, and \emph{textfooler} attack recipes, \emph{iga} was the most effective in executing valid attacks (3 out 10 examples). Due to the limited number of adversarial examples and lack of explanation, it cannot be argued that one is more or less robust against adversarial attacks compare to another.
+
+
+\begin{quote}
+\textbf{Example A}
+
+sentence1: Mrs. Bush's approval ratings have remained very high, above 80\%, even as her husband's have recently dropped below 50\%.
+
+sentence2: 80\% approve of Mr. Bush.
+
+\textcolor{ForestGreen}{Not entailment (98\%)} --> \textcolor{ForestGreen}{Entailment (52\%)} [BERT] 
+
+sentence1: Mrs. Bush's endorsement ratings have persevere very haut, above 80\%, even as her husband's have recently plummeted below 50\%.
+
+sentence2: 80\% endorsement of Mr. Bush.
+
+\textcolor{ForestGreen}{Not entailment (95\%)} --> \textcolor{ForestGreen}{Entailment (57\%)} [ALBERT] 
+
+sentence1: Mrs. Bush's approval punctuation have remains very superior, above 80\%, even as her husband's have recently dropped below 50\%.
+
+sentence2: 80\% approval of Monsieur. Bush.
+\end{quote}
+
+Example A demonstrates that both BERT and ALBERT are vulnerable to this adversarial attack. While \emph{haut} is french and \emph{superior} has a different meaning in this context, it was enough to make both models to classify the example as \emph{Entailment} when it is clearly not. Furthermore, this particular example was successful in all above mentioned recipes. 
+
+\begin{quote}
+\textbf{Example B}
+
+sentence1: Two British soldiers have been arrested in the southern Iraq city of Basra, sparking clashes outside a police station where they are being held.
+
+sentence2: Two British tanks, sent to the police station where the soldiers are being held, were set alight in clashes.
+
+\textcolor{ForestGreen}{Not entailment (97\%)} --> \textcolor{ForestGreen}{Entailment (71\%)} [BERT] 
+
+sentence1: Two British solider have been captured in the southern Iraq city of Basra, sparking clashes outboard a police station where they are being held.
+
+sentence2: Two British tanks, sent to the policing station where the soldiers are being held, were set alight in clashes.
+
+\textcolor{ForestGreen}{Not entailment (97\%)} --> \textcolor{Red}{[FAILED]} [ALBERT] 
+
+\end{quote}
+
+In Example B, \emph{iga} recipe fails to produce a valid adversarial example for ALBERT. However, the lack of an successful attack does not mean that ALBERT is more robust against than BERT in this particular example since the \emph{textfooler} recipe was capable of generating a valid adversarial attack.
+
+\begin{quote}
+\textbf{Example C}
+
+sentence1: U.S. forces have been engaged in intense fighting after insurgents launched simultaneous attacks in several Iraqi cities, including Fallujah and Baqubah.
+
+sentence2: Fallujah and Baqubah are Iraqi cities.
+
+\textcolor{ForestGreen}{Entailment (90\%)} --> \textcolor{ForestGreen}{Not entailment (98\%)} [BERT] 
+
+Sentence 1: U.S. forces have been engaged in intense fighting after insurgents launched simultaneous attacks in several Iraqi cities, including Fallujah and Baqubah.
+
+sentence2: Fallujah and Baqubah are Iraqi townships.
+
+\textcolor{ForestGreen}{Entailment (96\%)} --> \textcolor{ForestGreen}{Not entailment (96\%)} [ALBERT] 
+
+sentence1: U.S. forces have been engaged in intense fighting after insurgents launched simultaneous attacks in several Iraqi townships, including Fallujah and Baqubah.
+
+sentence2: Fallujah and Baqubah are Iraqi cities.
+
+\end{quote}
+
+Example C shows that both BERT and ALBERT are vulnerable to this very simple adversarial attack (cities <--> townships). Hwoever, this particular example was only successful in \emph{iga} recipe. 
+
+On average, ALBERT (20m 11s, 4m 27s, and 15s) took longer time than BERT (15m 46s, 6m 12s, and 17s) to complete each attack (\emph{fast-alzantot}, \emph{iga}, and \emph{textfooler}). However, attack time does not reflect inference speed as it depends more on the attack recipes than the models.
+
+\subsection{Counterfactual explanation}
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{lit-rte-example-c-adversarial-a}
+    \caption{Screenshot of LIT \cite{Tenney2020TheLI} for Adversarial Sentences from Example C [BERT]}
+    \floatfoot{\textit{Notes:} bert-base-uncased-RTE (top) and albert-base-v2-RTE (bottom) models on GLUE RTE validation dataset (N=277). [BERT] \emph{cities} from sentence2 is swapped with \emph{townships}.}
+    \label{fig:lit-rte-example-c-adversarial-a}
+\end{figure}
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{lit-rte-example-c-adversarial-b}
+    \caption{Screenshot of LIT \cite{Tenney2020TheLI} for Adversarial Sentences from Example C [ALBERT]}
+    \floatfoot{\textit{Notes:} bert-base-uncased-RTE (top) and albert-base-v2-RTE (bottom) models on GLUE RTE validation dataset (N=277). [ALBERT] \emph{cities} from sentence1 is swapped with \emph{townships}.}
+    \label{fig:lit-rte-example-c-adversarial-b}
+\end{figure}
+
+\clearpage
+
+Similar to section \ref{adversarial-attack}, the same bert-base-uncased-RTE and albert-base-v2-RTE models were used in this experiment to address the issues found in section \ref{adversarial-attack}. With LIT (Language Interpretability Tool) by \citet{Tenney2020TheLI}, Example C from section \ref{adversarial-attack} was used to generate counterfactual examples by swapping \emph{cities} and \emph{townships} in either sentence1 or sentence2. Based on Figure \ref{fig:lit-rte-example-c-adversarial-b}, BERT could be considered more robust than ALBERT for this particular example.
+
+\section{Discussion}
+
+\textbf{Embeddings visualization}
+
+The Language Interpretability Tool (LIT) comes with the Embedding Projector that aims to help machine learning developers and researchers to investigate semantically meaningful vectors in embedding space (\citet{Tenney2020TheLI}). It provides UMAP, t-SNE, and PCA projections to visualize layer-wise embeddings of any machine learning models. We chose UMAP because it has demonstrably better run time performance than t-SNE and preserves more of the global structure of larger datasets (\citet{McInnes2018UMAPUM}).
+
+Although qualitative analysis of visualization should not be interpreted as a definitive evidence (\citet{Rogers2020API}), UMAP visualization of embeddings can be quite useful for exploring and comparing clusters and global structures of NLP models (\citet{Tenney2020TheLI}). Furthermore, Sentence-BERT overcomes the short comings of layer-wise embeddings by using siamese / triplet network architecture to derive semantically meaningful sentence embeddings. Nonetheless, visualizations in Figure \ref{fig:sts-b-ag-news} are the exceptions rather than the rules when it comes to embeddings visualization, since most of the fine-tuned models result in widely different embeddings that have far less meaningful representations (\citet{reimers-gurevych-2019-sentence}).
+
+\textbf{Behavioral testing and adversarial attack}
+
+One of the primary goals of training NLP models is generalization (\citet{Morris2020TextAttackAF}) and these models are extremely good at finding correlations and patterns that are consistent across their training dataset. However, many of theses correlations and patterns are actually spurious and do not hold for other distributions. While performance on in-distribution is a useful indicator, in-distribution performance is often not comprehensive, and contain the same biases as the training data (\citet{Ribeiro2020BeyondAB}).
+
+Out of existing behavorial and adversarial tools, we chose Checklist and TextAttack because both tools can be directly integrated with HuggingFace’s transformers. CheckList is a comprehensive behavioral testing of NLP models that guides users in what to test, by providing a list of linguistic capabilities (\citet{Ribeiro2020BeyondAB}). TextAttack aims to implement adversarial attacks that, given an NLP model, find a perturbation of an input sequence that satisfies the attack's goal while adhering to certain linguistic constraints (\citet{Morris2020TextAttackAF}). These tools make it easier to reason about the behavior of NLP models under distribution shift and adversarial settings, as well as their tendencies to behave based on social biases or shallow heuristics.
+
+According to \citet{Ribeiro2020BeyondAB}, CheckList should not be treated as yet another set of challenge or benchmark datasets; instead, it should complement benchmarks to systematically evaluate the precise capabilities of a model that are not captured in benchmarks. Based on Table \ref{tab:TextAttack-models-evaluation-results}, it can be somewhat vague and possibly misleading how BERT and ALBERT models fare in respect to \emph{Robustness} and \emph{Fairness}. With behavioral testing approach, model capability can be evaluated more precisely across different models and datasets (Table \ref{checklist-testing-results} and Table \ref{checklist-qqp-testing-results}).
+
+Much of the adversarial attacks reported successful by TextAttack \cite{Morris2020TextAttackAF} were often invalid because the search constraints were not properly optimized. Regardless, TextAttack \cite{Morris2020TextAttackAF} is highly effective for identifying weakness of each model. More precisely, it is useful to identify which token to attack, but often fails to generate valid tokens to substitute it.
+
+
+\textbf{Counterfactual explanation}
+
+While CheckList \cite{Ribeiro2020BeyondAB} and TextAttack \cite{Morris2020TextAttackAF} provide an easy way of evaluating NLP models beyond the typical benchmarks, the Language Interpretability Tool (LIT) provides a more comprehensive set of tools for developers and researchers to debug performance of NLP models (\citet{Tenney2020TheLI}). With LIT, users can easily hop between visualizations to test local hypotheses and validate them over a dataset, add new data points on the fly, and compare two models side-by-side.
+
+LIT \cite{Tenney2020TheLI} consists of a wide variety of interpretability and explainability components. One of which is the \emph{Salience Map}. This one is particularly interesting because there seems to be a correlation between the attack targets chosen by TextAttack \cite{Morris2020TextAttackAF} recipes and the token gradient norm weights in the \emph{Salience Map}. However, tokens with the highest weights are not always the best target for generating insightful counterfactual examples.
+
+\clearpage
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+
+\appendix
+
+\processdelayedfloats
+
+\end{document}
